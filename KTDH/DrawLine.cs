@@ -7,6 +7,8 @@ namespace KTDH
 {
     public class DrawLine
     {
+        public static int space = 3;
+        public static int line = 5;
         public static List<Point> DDA(Point point1, Point point2)
         {
             List<Point> points = new List<Point>();
