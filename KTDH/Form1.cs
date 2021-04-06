@@ -24,25 +24,26 @@ namespace KTDH
         public Form1()
         {
             InitializeComponent();
-            graphics = mainPanel.CreateGraphics();
+            graphics = drawPanel.CreateGraphics();
             graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             pen = new Pen(Color.Black, 4);
-            eraser = new Pen(mainPanel.BackColor, 5);
+            eraser = new Pen(drawPanel.BackColor, 5);
             eraser.StartCap = eraser.EndCap = pen.StartCap = pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                    
         }
         private void DrawCenterMyCoordinate()
         {
             List<Point> axis = MyCoordinate.DrawMyCoordinateAxis();
             List<Point> netPixel = MyCoordinate.DrawNetPixel();
             Pen redPen = new Pen(Color.Red, 5);
-            Pen blackPen = new Pen(Color.Black, 1);
+            Pen grayPen = new Pen(Color.LightGray, 1);
             
             for (int i = 0; i < netPixel.Count - 1; i++)
             {
                 if (netPixel.ElementAt(i).X == netPixel.ElementAt(i + 1).X
                     || netPixel.ElementAt(i).Y == netPixel.ElementAt(i + 1).Y)
                 {
-                    graphics.DrawLine(blackPen, netPixel.ElementAt(i), netPixel.ElementAt(i + 1));
+                    graphics.DrawLine(grayPen, netPixel.ElementAt(i), netPixel.ElementAt(i + 1));
                 }
             }
             EraseCenterMyCoordinate();
@@ -70,117 +71,6 @@ namespace KTDH
             }
         }
 
-        private void mainPanel_MouseMove(object sender, MouseEventArgs e)
-        {
-            //cai nay chuc nang khac
-            if (moving && point1.X!=-1 && point1.Y!=-1 && drawLine == false)
-            {
-                graphics.DrawLine(pen, point1, e.Location);
-                point1.X = e.X;
-                point1.Y = e.Y;
-            }
-        }
-
-        private void mainPanel_MouseUp(object sender, MouseEventArgs e)
-        {
-            //cai nay chuc nang khac
-            if (drawLine == false)
-            {
-                moving = false;
-                point1.X = -1;
-                point1.Y = -1;
-            }
-        }
-
-        private void mainPanel_MouseDown(object sender, MouseEventArgs e)
-        {
-            // xu ly ve doan thang
-            if (drawLine == false)
-            {
-                moving = true;
-                point1.X = e.X;
-                point1.Y = e.Y;
-            }
-            else
-            {
-                if(isPoint1==false)
-                {
-                    point1.X = e.X;
-                    point1.Y = e.Y;
-                    isPoint1 = true;
-                }
-                else if(isPoint1 && !isPoint2)
-                {
-                    point2.X = e.X;
-                    point2.Y = e.Y;
-                    isPoint2 = true;
-                    Point firstPoint = point1;
-                    Point seccondPoint = point2;
-                    List<Point> points = DrawLine.DDA(firstPoint, seccondPoint);
-                    int count = 0;
-                    int line = 0;
-                    int countSpace = 0;
-
-                    //---------Ve . mut
-                    /*for (int i = 0; i < points.Count - 1; i+=5)
-                    //{
-                    //    if(line != DrawLine.line)
-                    //    {
-                    //        Point point = points.ElementAt(i);
-                    //        graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
-                    //        line++;
-                    //    }
-                    //    else
-                    //    {
-                    //        count++;
-                    //        if(count==DrawLine.space && countSpace == 0)
-                    //        {
-                    //            Point point = points.ElementAt(i);
-                    //            graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
-                    //            countSpace++;
-                    //            count = 0;
-                    //        }
-                    //        else if(count == DrawLine.space && countSpace == 1)
-                    //        {
-                    //            count = line = countSpace = 0;
-                    //        }
-                    //    }
-                    }*/
-
-
-                    //---------Ve duong thang dut net
-                    /*for (int i = 0; i < points.Count - 1; i += 5)
-                    //{
-                    //    if (line != DrawLine.line)
-                    //    {
-                    //        Point point = points.ElementAt(i);
-                    //        graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
-                    //        line++;
-                    //    }
-                    //    else
-                    //    {
-                    //        count++;
-                    //        if (count == DrawLine.space)
-                    //        {
-                    //            count = line = 0;
-                    //        }
-                    //    }
-                    }*/
-
-                    //---------Ve duong thang
-                    for (int i = 0; i < points.Count - 1; i += 5)
-                    {
-                        if (line != DrawLine.line)
-                        {
-                            Point point = points.ElementAt(i);
-                            graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
-                        }
-                    }
-                    isPoint1 = isPoint2 = false;
-                }
-            }
-        }
-
         private void btDrawLine_Click(object sender, EventArgs e)
         {
 
@@ -195,6 +85,154 @@ namespace KTDH
                 DrawCenterMyCoordinate();
                 
             }   
+        }
+
+        private void drawStraightLine(List<Point> points)
+        {
+            int line = 0;
+            for (int i = 0; i < points.Count - 1; i += 5)
+            {
+                if (line != DrawLine.line)
+                {
+                    Point point = points.ElementAt(i);
+                    graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
+                }
+            }
+        }
+
+        private void drawDashedLine(List<Point> points)
+        {
+            int count = 0;
+            int line = 0;
+            for (int i = 0; i < points.Count - 1; i += 5)
+            {
+                if (line != DrawLine.line)
+                {
+                    Point point = points.ElementAt(i);
+                    graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
+                    line++;
+                }
+                else
+                {
+                    count++;
+                    if (count == DrawLine.space)
+                    {
+                        count = line = 0;
+                    }
+                }
+            }
+        }
+
+        private void drawDotLine(List<Point> points)
+        {
+            int count = 0;
+            int countSpace = 0;
+            int line = 0;
+
+            for (int i = 0; i < points.Count - 1; i += 5)
+            {
+                if (line != DrawLine.line)
+                {
+                    Point point = points.ElementAt(i);
+                    graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
+                    line++;
+                }
+                else
+                {
+                    count++;
+                    if (count == DrawLine.space && countSpace == 0)
+                    {
+                        Point point = points.ElementAt(i);
+                        graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
+                        countSpace++;
+                        count = 0;
+                    }
+                    else if (count == DrawLine.space && countSpace == 1)
+                    {
+                        count = line = countSpace = 0;
+                    }
+                }
+            }
+        }
+
+        private void drawPanel_MouseUp(object sender, MouseEventArgs e)
+        {
+            //cai nay chuc nang khac
+            if (drawLine == false)
+            {
+                moving = false;
+                point1.X = -1;
+                point1.Y = -1;
+            }
+        }
+
+        private void drawPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            //cai nay chuc nang khac
+            if (moving && point1.X != -1 && point1.Y != -1 && drawLine == false)
+            {
+                graphics.DrawLine(pen, point1, e.Location);
+                point1.X = e.X;
+                point1.Y = e.Y;
+            }
+        }
+
+        private void drawPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            // xu ly ve doan thang
+            if (drawLine == false)
+            {
+                moving = true;
+                point1.X = e.X;
+                point1.Y = e.Y;
+            }
+            else
+            {
+                if (isPoint1 == false)
+                {
+                    point1.X = e.X;
+                    point1.Y = e.Y;
+                    isPoint1 = true;
+                    Point showPoint = MyCoordinate.ConvertToMyPoint(point1.X, point1.Y);
+                    textBoxX.Text = showPoint.X.ToString();
+                    textBoxY.Text = showPoint.Y.ToString();
+                }
+                else if (isPoint1 && !isPoint2)
+                {
+                    point2.X = e.X;
+                    point2.Y = e.Y;
+                    isPoint2 = true;
+                    Point showPoint = MyCoordinate.ConvertToMyPoint(point2.X, point2.Y);
+                    textBoxX.Text = showPoint.X.ToString();
+                    textBoxY.Text = showPoint.Y.ToString();
+                    Point firstPoint = point1;
+                    Point seccondPoint = point2;
+                    List<Point> points = DrawLine.DDA(firstPoint, seccondPoint);
+                    
+                    switch(lineStyleComboBox.SelectedIndex)
+                    {
+                        case 0:
+                            {
+                                drawStraightLine(points);
+                                break;
+                            }
+                        case 1:
+                            {
+                                drawDotLine(points);
+                                break;
+                            }
+                        case 2:
+                            {
+                                drawDashedLine(points);
+                                break;
+                            }
+                        default:
+                            break;
+                    }
+                    
+                    isPoint1 = isPoint2 = false;
+                }
+            }
         }
     }
 }

@@ -7,12 +7,12 @@ namespace KTDH
 {
     public class MyCoordinate
     {
-        public static Point centerPoint = new Point(400, 225);
+        public static Point centerPoint = new Point(350, 240);
 
-        //public static Point ConvertToMyPoint(int x, int y)
-        //{
-        //    return new Point(x - centerPoint.X, y - centerPoint.Y);
-        //}
+        public static Point ConvertToMyPoint(int x, int y)
+        {
+            return new Point((x - centerPoint.X)/5, (centerPoint.Y - y)/5);
+        }
         public static List<Point> DrawMyCoordinateAxis()
         {
             List<Point> points = new List<Point>();

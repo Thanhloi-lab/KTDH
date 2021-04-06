@@ -12,6 +12,17 @@ namespace KTDH
         public static List<Point> DDA(Point point1, Point point2)
         {
             List<Point> points = new List<Point>();
+            //point1.X = point1.X % 5 == 0 ? point1.X : (int)(point1.X / 5) * 5;
+            //point1.Y = point1.Y % 5 == 0 ? point1.Y : (int)(point1.Y / 5) * 5;
+
+            //point2.X = point2.X % 5 == 0 ? point2.X : (int)(point2.X / 5) * 5;
+            //point2.Y = point2.Y % 5 == 0 ? point2.Y : (int)(point2.Y / 5) * 5;
+
+            //point1.X = point1.X - 3;
+            //point1.Y = point1.Y - 3;
+
+            //point2.X = point2.X - 3;
+            //point2.Y = point2.Y - 3;
 
             int dx = point2.X - point1.X;
             int dy = point2.Y - point1.Y;
