@@ -55,6 +55,10 @@ namespace KTDH
         private void EraseMyCoordinate()
         {
             graphics.Clear(mainPanel.BackColor);
+            foreach (var item in mainPanel.Controls.OfType<Label>().ToList())
+            {
+                mainPanel.Controls.Remove(item as Label);
+            }
         }
         private void mainPanel_MouseMove(object sender, MouseEventArgs e)
         {
@@ -81,7 +85,8 @@ namespace KTDH
             Label label = new Label();
             Point point = new Point(e.X, e.Y);
             label.Location = new Point(e.X+10, e.Y);
-            label.Text = "(" + MyCoordinate.ConvertToMyPoint(point).X + ", " + MyCoordinate.ConvertToMyPoint(point).Y + ")";
+            //label.Text = "(" + MyCoordinate.ConvertToMyPoint(point).X + ", " + MyCoordinate.ConvertToMyPoint(point).Y + ")";
+            label.Text = "(" + e.X + ", " + e.Y + ")";
             label.SendToBack();
             label.ForeColor = Color.Red;
             label.AutoSize = true;
@@ -109,6 +114,7 @@ namespace KTDH
                     options.IsPoint2 = true;
                     List<Point> points = DrawLine.DDA(point1, point2);
                     DrawLineWithOption(points);
+                    DrawArrow(graphics, point1, point2, 3);
                     options.IsPoint1 = options.IsPoint2 = false;
                 }
                 else if (options.IsPoint1 && !options.IsPoint2 && options.DrawRecangle)
@@ -238,9 +244,122 @@ namespace KTDH
                 graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
             }
         }
-        public void DrawArrow(List<Point> points, Graphics graphics, Pen pen)
+        private void DrawArrow(Graphics g, PointF ArrowStart, PointF ArrowEnd, int ArrowMultiplier)
         {
-            //viet vao day
+
+            //tip of the arrow
+            PointF arrowPoint = ArrowEnd;
+
+            //determine arrow length
+            double arrowLength = Math.Sqrt(Math.Pow(Math.Abs(ArrowStart.X - ArrowEnd.X), 2) +
+                                           Math.Pow(Math.Abs(ArrowStart.Y - ArrowEnd.Y), 2));
+
+            //determine arrow angle
+            double arrowAngle = Math.Atan2(Math.Abs(ArrowStart.Y - ArrowEnd.Y), Math.Abs(ArrowStart.X - ArrowEnd.X));
+
+            //get the x,y of the back of the point
+
+            //to change from an arrow to a diamond, change the 3
+            //in the next if/else blocks to 6
+
+            double pointX, pointY;
+            if (ArrowStart.X > ArrowEnd.X)
+            {
+                pointX = ArrowStart.X - (Math.Cos(arrowAngle) * (arrowLength - (3 * ArrowMultiplier)));
+            }
+            else
+            {
+                pointX = Math.Cos(arrowAngle) * (arrowLength - (3 * ArrowMultiplier)) + ArrowStart.X;
+            }
+
+            if (ArrowStart.Y > ArrowEnd.Y)
+            {
+                pointY = ArrowStart.Y - (Math.Sin(arrowAngle) * (arrowLength - (3 * ArrowMultiplier)));
+            }
+            else
+            {
+                pointY = (Math.Sin(arrowAngle) * (arrowLength - (3 * ArrowMultiplier))) + ArrowStart.Y;
+            }
+
+            PointF arrowPointBack = new PointF((float)pointX, (float)pointY);
+
+            //get the secondary angle of the left tip
+            double angleB = Math.Atan2((3 * ArrowMultiplier), (arrowLength - (3 * ArrowMultiplier)));
+
+            double angleC = Math.PI * (90 - (arrowAngle * (180 / Math.PI)) - (angleB * (180 / Math.PI))) / 180;
+
+            //get the secondary length
+            double secondaryLength = (3 * ArrowMultiplier) / Math.Sin(angleB);
+
+            if (ArrowStart.X > ArrowEnd.X)
+            {
+                pointX = ArrowStart.X - (Math.Sin(angleC) * secondaryLength);
+            }
+            else
+            {
+                pointX = (Math.Sin(angleC) * secondaryLength) + ArrowStart.X;
+            }
+
+            if (ArrowStart.Y > ArrowEnd.Y)
+            {
+                pointY = ArrowStart.Y - (Math.Cos(angleC) * secondaryLength);
+            }
+            else
+            {
+                pointY = (Math.Cos(angleC) * secondaryLength) + ArrowStart.Y;
+            }
+
+            //get the left point
+            PointF arrowPointLeft = new PointF((float)pointX, (float)pointY);
+
+            //move to the right point
+            angleC = arrowAngle - angleB;
+
+            if (ArrowStart.X > ArrowEnd.X)
+            {
+                pointX = ArrowStart.X - (Math.Cos(angleC) * secondaryLength);
+            }
+            else
+            {
+                pointX = (Math.Cos(angleC) * secondaryLength) + ArrowStart.X;
+            }
+
+            if (ArrowStart.Y > ArrowEnd.Y)
+            {
+                pointY = ArrowStart.Y - (Math.Sin(angleC) * secondaryLength);
+            }
+            else
+            {
+                pointY = (Math.Sin(angleC) * secondaryLength) + ArrowStart.Y;
+            }
+
+            PointF arrowPointRight = new PointF((float)pointX, (float)pointY);
+
+            //create the point list
+            PointF[] arrowPoints = new PointF[4];
+            arrowPoints[0] = arrowPoint;
+            arrowPoints[1] = arrowPointLeft;
+            arrowPoints[2] = arrowPointBack;
+            arrowPoints[3] = arrowPointRight;
+            Point arrowPointInt = new Point((int)arrowPoint.X, (int)arrowPoint.Y);
+            Point arrowPointBackInt = new Point((int)arrowPointBack.X, (int)arrowPointBack.Y);
+            Point arrowPointLeftInt = new Point((int)arrowPointLeft.X, (int)arrowPointLeft.Y);
+            Point arrowPointRightInt = new Point((int)arrowPointRight.X, (int)arrowPointRight.Y);
+
+            List<Point> points =  DrawLine.DDA(arrowPointInt, arrowPointLeftInt);
+            DrawBasicLine(points, g, pen);
+
+            points = DrawLine.DDA(arrowPointInt, arrowPointRightInt);
+            DrawBasicLine(points, g, pen);
+
+            points = DrawLine.DDA(arrowPointLeftInt, arrowPointRightInt);
+            DrawBasicLine(points, g, pen);
+
+            //draw the outline
+            //g.DrawPolygon(pen, arrowPoints);
+
+            //fill the polygon
+            //g.FillPolygon(new SolidBrush(ArrowColor), arrowPoints);
         }
         private void btDrawLine_Click(object sender, EventArgs e)
         {
@@ -248,7 +367,6 @@ namespace KTDH
             {
                 options.AllOptionsExceptLineOptionsOff();
                 options.AllDrawLineOptionsOff();
-                EraseMyCoordinate();
             }
             else
             {
@@ -256,7 +374,6 @@ namespace KTDH
                 options.AllDrawLineOptionsOff();
                 options.DrawLine = true;
                 options.DrawBasicLine = true;
-                DrawCenterMyCoordinate();
             }
         }
         private void drawRecangle_Click(object sender, EventArgs e)
@@ -265,14 +382,11 @@ namespace KTDH
             {
                 options.AllOptionsExceptLineOptionsOff();
                 options.AllDrawLineOptionsOff();
-                EraseMyCoordinate();
             }
             else
             {
                 options.AllOptionsExceptLineOptionsOff();
                 options.DrawRecangle = true;
-                DrawCenterMyCoordinate();
-
             }
         }
         private void btDrawDashLine_Click(object sender, EventArgs e)
@@ -281,7 +395,6 @@ namespace KTDH
             {
                 options.AllOptionsExceptLineOptionsOff();
                 options.AllDrawLineOptionsOff();
-                EraseMyCoordinate();
             }
             else if (!options.DrawDashLine)
             {
@@ -289,7 +402,6 @@ namespace KTDH
                 options.AllDrawLineOptionsOff();
                 options.DrawLine = true;
                 options.DrawDashLine = true;
-                DrawCenterMyCoordinate();
             }
         }
         private void btDrawDashLineWithOneDot_Click(object sender, EventArgs e)
@@ -298,7 +410,6 @@ namespace KTDH
             {
                 options.AllOptionsExceptLineOptionsOff();
                 options.AllDrawLineOptionsOff();
-                EraseMyCoordinate();
             }
             else if (!options.DrawDashLineWithOneDot)
             {
@@ -306,7 +417,6 @@ namespace KTDH
                 options.AllDrawLineOptionsOff();
                 options.DrawLine = true;
                 options.DrawDashLineWithOneDot = true;
-                DrawCenterMyCoordinate();
             }
         }
         private void btDrawDashLineWithTwoDot_Click(object sender, EventArgs e)
@@ -315,7 +425,6 @@ namespace KTDH
             {
                 options.AllOptionsExceptLineOptionsOff();
                 options.AllDrawLineOptionsOff();
-                EraseMyCoordinate();
             }
             else if (!options.DrawDashLineWithTwoDot)
             {
@@ -323,7 +432,6 @@ namespace KTDH
                 options.AllDrawLineOptionsOff();
                 options.DrawLine = true;
                 options.DrawDashLineWithTwoDot = true;
-                DrawCenterMyCoordinate();
             }
         }
         private void btDrawArrow_Click(object sender, EventArgs e)
@@ -332,7 +440,6 @@ namespace KTDH
             {
                 options.AllOptionsExceptLineOptionsOff();
                 options.AllDrawLineOptionsOff();
-                EraseMyCoordinate();
             }
             else
             {
@@ -340,8 +447,15 @@ namespace KTDH
                 options.AllDrawLineOptionsOff();
                 options.DrawLine = true;
                 options.DrawArrow = true;
-                DrawCenterMyCoordinate();
             }
+        }
+        private void btClear_Click(object sender, EventArgs e)
+        {
+            EraseMyCoordinate();
+        }
+        private void btDrawMyCoordinate_Click(object sender, EventArgs e)
+        {
+            DrawCenterMyCoordinate();
         }
     }
 }
