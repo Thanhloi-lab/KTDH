@@ -8,11 +8,12 @@ namespace KTDH
     public class MyCoordinate
     {
         public static Point centerPoint = new Point(400, 225);
+        public static int scale = 5;
 
-        //public static Point ConvertToMyPoint(int x, int y)
-        //{
-        //    return new Point(x - centerPoint.X, y - centerPoint.Y);
-        //}
+        public static Point ConvertToMyPoint(Point point)
+        {
+            return new Point((point.X - centerPoint.X) / scale, (centerPoint.Y - point.Y) / scale);
+        }
         public static List<Point> DrawMyCoordinateAxis()
         {
             List<Point> points = new List<Point>();

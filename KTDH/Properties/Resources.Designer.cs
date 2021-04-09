@@ -59,5 +59,15 @@ namespace KTDH.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap _53010674_808022032885098_4649025364587184128_n {
+            get {
+                object obj = ResourceManager.GetObject("53010674_808022032885098_4649025364587184128_n", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

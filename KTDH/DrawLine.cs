@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 
 namespace KTDH
 {
     public class DrawLine
     {
-        public static int space = 3;
-        public static int line = 5;
+        private static int space = 3;
+        private static int line = 5;
+
+        public static int Space { get => space; set => space = value; }
+        public static int Line { get => line; set => line = value; }
+
         public static List<Point> DDA(Point point1, Point point2)
         {
             List<Point> points = new List<Point>();
@@ -35,8 +40,8 @@ namespace KTDH
                 X += Xinc;           // increment in x at each step
                 Y += Yinc;           // increment in y at each step
             }
-
             return points;
         }
+        
     }
 }
