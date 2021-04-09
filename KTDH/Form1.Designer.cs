@@ -30,6 +30,7 @@ namespace KTDH
         private void InitializeComponent()
         {
             this.mainPanel = new System.Windows.Forms.Panel();
+            this.hasArrowCheckBox = new System.Windows.Forms.CheckBox();
             this.drawPanel = new System.Windows.Forms.Panel();
             this.lineStyleComboBox = new System.Windows.Forms.ComboBox();
             this.labelY = new System.Windows.Forms.Label();
@@ -43,6 +44,7 @@ namespace KTDH
             // mainPanel
             // 
             this.mainPanel.BackColor = System.Drawing.Color.LemonChiffon;
+            this.mainPanel.Controls.Add(this.hasArrowCheckBox);
             this.mainPanel.Controls.Add(this.drawPanel);
             this.mainPanel.Controls.Add(this.lineStyleComboBox);
             this.mainPanel.Controls.Add(this.labelY);
@@ -55,6 +57,16 @@ namespace KTDH
             this.mainPanel.Name = "mainPanel";
             this.mainPanel.Size = new System.Drawing.Size(811, 480);
             this.mainPanel.TabIndex = 0;
+            // 
+            // hasArrowCheckBox
+            // 
+            this.hasArrowCheckBox.AutoSize = true;
+            this.hasArrowCheckBox.Location = new System.Drawing.Point(12, 116);
+            this.hasArrowCheckBox.Name = "hasArrowCheckBox";
+            this.hasArrowCheckBox.Size = new System.Drawing.Size(81, 19);
+            this.hasArrowCheckBox.TabIndex = 10;
+            this.hasArrowCheckBox.Text = "Has Arrow";
+            this.hasArrowCheckBox.UseVisualStyleBackColor = true;
             // 
             // drawPanel
             // 
@@ -71,19 +83,21 @@ namespace KTDH
             // 
             this.lineStyleComboBox.FormattingEnabled = true;
             this.lineStyleComboBox.Items.AddRange(new object[] {
-            "Line",
-            "Dot",
-            "Dash"});
-            this.lineStyleComboBox.Location = new System.Drawing.Point(0, 62);
+            "Basic Line",
+            "Dash Line",
+            "Dash 1 dot Line",
+            "Dash 2 dot Line",
+            "Rectangle"});
+            this.lineStyleComboBox.Location = new System.Drawing.Point(12, 66);
             this.lineStyleComboBox.Name = "lineStyleComboBox";
             this.lineStyleComboBox.Size = new System.Drawing.Size(75, 23);
             this.lineStyleComboBox.TabIndex = 8;
-            this.lineStyleComboBox.Text = "Line";
+            this.lineStyleComboBox.Text = "Basic Line";
             // 
             // labelY
             // 
             this.labelY.AutoSize = true;
-            this.labelY.Location = new System.Drawing.Point(0, 413);
+            this.labelY.Location = new System.Drawing.Point(12, 416);
             this.labelY.Name = "labelY";
             this.labelY.Size = new System.Drawing.Size(14, 15);
             this.labelY.TabIndex = 7;
@@ -93,7 +107,7 @@ namespace KTDH
             // 
             this.labelX.AutoSize = true;
             this.labelX.BackColor = System.Drawing.Color.Transparent;
-            this.labelX.Location = new System.Drawing.Point(0, 381);
+            this.labelX.Location = new System.Drawing.Point(12, 384);
             this.labelX.Name = "labelX";
             this.labelX.Size = new System.Drawing.Size(14, 15);
             this.labelX.TabIndex = 6;
@@ -101,25 +115,25 @@ namespace KTDH
             // 
             // textBoxX
             // 
-            this.textBoxX.Location = new System.Drawing.Point(20, 378);
+            this.textBoxX.Location = new System.Drawing.Point(32, 381);
             this.textBoxX.Name = "textBoxX";
             this.textBoxX.Size = new System.Drawing.Size(55, 23);
             this.textBoxX.TabIndex = 5;
             // 
             // textBoxY
             // 
-            this.textBoxY.Location = new System.Drawing.Point(20, 410);
+            this.textBoxY.Location = new System.Drawing.Point(32, 413);
             this.textBoxY.Name = "textBoxY";
             this.textBoxY.Size = new System.Drawing.Size(55, 23);
             this.textBoxY.TabIndex = 4;
             // 
             // btDrawLine
             // 
-            this.btDrawLine.Location = new System.Drawing.Point(0, 0);
+            this.btDrawLine.Location = new System.Drawing.Point(12, 12);
             this.btDrawLine.Name = "btDrawLine";
             this.btDrawLine.Size = new System.Drawing.Size(75, 23);
             this.btDrawLine.TabIndex = 0;
-            this.btDrawLine.Text = "Draw line";
+            this.btDrawLine.Text = "Draw";
             this.btDrawLine.UseVisualStyleBackColor = true;
             this.btDrawLine.Click += new System.EventHandler(this.btDrawLine_Click);
             // 
@@ -147,6 +161,7 @@ namespace KTDH
         private System.Windows.Forms.TextBox textBoxY;
         private System.Windows.Forms.ComboBox lineStyleComboBox;
         private System.Windows.Forms.Panel drawPanel;
+        private System.Windows.Forms.CheckBox hasArrowCheckBox;
     }
 }
 

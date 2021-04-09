@@ -8,15 +8,16 @@ namespace KTDH
     public class MyCoordinate
     {
         public static Point centerPoint = new Point(350, 240);
+        public static int scale = 5;
 
-        public static Point ConvertToMyPoint(int x, int y)
+        public static Point ConvertToMyPoint(Point point)
         {
-            return new Point((x - centerPoint.X)/5, (centerPoint.Y - y)/5);
+            return new Point((point.X - centerPoint.X) / scale, (centerPoint.Y - point.Y) / scale);
         }
         public static List<Point> DrawMyCoordinateAxis()
         {
             List<Point> points = new List<Point>();
-            for(int i=0; i< centerPoint.X*2; i++)
+            for (int i = 0; i < centerPoint.X * 2; i++)
             {
                 Point point = new Point(i, centerPoint.Y);
                 points.Add(point);
@@ -31,10 +32,10 @@ namespace KTDH
         public static List<Point> DrawNetPixel()
         {
             List<Point> points = new List<Point>();
-            for (int i =2 ; i <=centerPoint.X * 2; i+=5)
+            for (int i = 2; i <= centerPoint.X * 2; i += 5)
             {
                 Point point = new Point(i, 0);
-                Point point1 = new Point(i, centerPoint.Y*2);
+                Point point1 = new Point(i, centerPoint.Y * 2);
                 points.Add(point);
                 points.Add(point1);
             }
