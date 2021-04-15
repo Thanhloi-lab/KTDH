@@ -26,7 +26,7 @@ namespace KTDH
             InitializeComponent();
             graphics = drawPanel.CreateGraphics();
             graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            pen = new Pen(Color.Black, 4);
+            pen = new Pen(Color.BlueViolet, 3);
             eraser = new Pen(drawPanel.BackColor, 5);
             eraser.StartCap = eraser.EndCap = pen.StartCap = pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
                     
@@ -134,7 +134,7 @@ namespace KTDH
                 Label label = new Label();
                 Point point = MyCoordinate.ConvertToMyPoint(new Point(e.X, e.Y));
                 label.Location = new Point(e.X + 10, e.Y);
-                //label.Text = "(" + MyCoordinate.ConvertToMyPoint(point).X + ", " + MyCoordinate.ConvertToMyPoint(point).Y + ")";
+                label.Text = "(" + MyCoordinate.ConvertToMyPoint(point).X + ", " + MyCoordinate.ConvertToMyPoint(point).Y + ")";
                 label.Text = "(" + point.X + ", " + point.Y + ")";
                 label.SendToBack();
                 label.ForeColor = Color.Red;
@@ -221,7 +221,7 @@ namespace KTDH
                 if (line != DrawLine.Line)
                 {
                     Point point = points.ElementAt(i);
-                    graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
+                    graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
                     line++;
                 }
                 else
@@ -230,7 +230,7 @@ namespace KTDH
                     if (count == DrawLine.Space && countSpace == 0)
                     {
                         Point point = points.ElementAt(i);
-                        graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
+                        graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
                         countSpace++;
                         count = 0;
                     }
@@ -252,7 +252,7 @@ namespace KTDH
                 if (inLine != DrawLine.Line)
                 {
                     Point point = points.ElementAt(i);
-                    graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
+                    graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
                     inLine++;
                 }
                 else
@@ -261,7 +261,7 @@ namespace KTDH
                     if (count == DrawLine.Space && countSpace == 0)
                     {
                         Point point = points.ElementAt(i);
-                        graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
+                        graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
                         countSpace++;
                         count = 0;
                     }
@@ -287,7 +287,7 @@ namespace KTDH
                 if (inLine != DrawLine.Line)
                 {
                     Point point = points.ElementAt(i);
-                    graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
+                    graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
                     inLine++;
                 }
                 else
@@ -302,11 +302,39 @@ namespace KTDH
         }
         public void DrawBasicLine(List<Point> points, Graphics graphics, Pen pen)
         {
-            for (int i = 0; i < points.Count - 1; i += MyCoordinate.scale)
+            for (int i = 0; i < points.Count; i += MyCoordinate.scale)
             {
                 Point point = points.ElementAt(i);
-                graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
+                graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
             }
+        }
+
+        private void DrawFixedArrow(Graphics g, PointF ArrowStart, PointF ArrowEnd)
+        {
+            double x1, x2, y1, y2;
+            double arrowLength = 20, arrowDegrees = 0.4;
+            double angle = Math.Atan2(ArrowEnd.Y - ArrowStart.Y, ArrowEnd.X - ArrowStart.X) + Math.PI;
+            x1 = ArrowEnd.X + arrowLength * Math.Cos(angle - arrowDegrees);
+            y1 = ArrowEnd.Y + arrowLength * Math.Sin(angle - arrowDegrees);
+            x2 = ArrowEnd.X + arrowLength * Math.Cos(angle + arrowDegrees);
+            y2 = ArrowEnd.Y + arrowLength * Math.Sin(angle + arrowDegrees);
+            int x4 = (int)((x1 + x2 + ArrowEnd.X) / 3);
+            int y4 = (int)((y1 + y2 + ArrowEnd.Y) / 3);
+            List<Point> points = new List<Point>();
+            List<Point> temp = new List<Point>();
+            Point arrowPoint1 = new Point((int)x1, (int)y1);
+            Point arrowPoint2 = new Point((int)x2, (int)y2);
+            Point arrowPoint3 = new Point((int)ArrowEnd.X, (int)ArrowEnd.Y);
+
+            temp = DrawLine.DDA(arrowPoint1, arrowPoint2);
+            points.AddRange(temp);
+            temp = DrawLine.DDA(arrowPoint2, arrowPoint3);
+            points.AddRange(temp);
+            temp = DrawLine.DDA(arrowPoint3, arrowPoint1);
+            points.AddRange(temp);
+
+            Pen arrowPen = new Pen(Color.BlueViolet,4);
+            DrawBasicLine(points, g, arrowPen);
         }
         private void DrawArrow(Graphics g, PointF ArrowStart, PointF ArrowEnd, int ArrowMultiplier)
         {
@@ -424,6 +452,11 @@ namespace KTDH
 
             //fill the polygon
             //g.FillPolygon(new SolidBrush(ArrowColor), arrowPoints);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            DrawCenterMyCoordinate();
         }
     }
 }

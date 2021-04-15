@@ -38,12 +38,14 @@ namespace KTDH
             this.textBoxX = new System.Windows.Forms.TextBox();
             this.textBoxY = new System.Windows.Forms.TextBox();
             this.btDrawLine = new System.Windows.Forms.Button();
+            this.btnClear = new System.Windows.Forms.Button();
             this.mainPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainPanel
             // 
             this.mainPanel.BackColor = System.Drawing.Color.LemonChiffon;
+            this.mainPanel.Controls.Add(this.btnClear);
             this.mainPanel.Controls.Add(this.hasArrowCheckBox);
             this.mainPanel.Controls.Add(this.drawPanel);
             this.mainPanel.Controls.Add(this.lineStyleComboBox);
@@ -88,7 +90,7 @@ namespace KTDH
             "Dash 1 dot Line",
             "Dash 2 dot Line",
             "Rectangle"});
-            this.lineStyleComboBox.Location = new System.Drawing.Point(12, 66);
+            this.lineStyleComboBox.Location = new System.Drawing.Point(12, 87);
             this.lineStyleComboBox.Name = "lineStyleComboBox";
             this.lineStyleComboBox.Size = new System.Drawing.Size(75, 23);
             this.lineStyleComboBox.TabIndex = 8;
@@ -137,6 +139,16 @@ namespace KTDH
             this.btDrawLine.UseVisualStyleBackColor = true;
             this.btDrawLine.Click += new System.EventHandler(this.btDrawLine_Click);
             // 
+            // btnClear
+            // 
+            this.btnClear.Location = new System.Drawing.Point(13, 42);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(75, 23);
+            this.btnClear.TabIndex = 11;
+            this.btnClear.Text = "Clear";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -162,6 +174,7 @@ namespace KTDH
         private System.Windows.Forms.ComboBox lineStyleComboBox;
         private System.Windows.Forms.Panel drawPanel;
         private System.Windows.Forms.CheckBox hasArrowCheckBox;
+        private System.Windows.Forms.Button btnClear;
     }
 }
 
