@@ -30,114 +30,123 @@ namespace KTDH
         private void InitializeComponent()
         {
             this.mainPanel = new System.Windows.Forms.Panel();
-            this.btDrawMyCoordinate = new System.Windows.Forms.Button();
-            this.btClear = new System.Windows.Forms.Button();
-            this.btDrawArrow = new System.Windows.Forms.Button();
-            this.btDrawDashLineWithTwoDot = new System.Windows.Forms.Button();
-            this.btDrawDashLineWithOneDot = new System.Windows.Forms.Button();
-            this.btDrawDashLine = new System.Windows.Forms.Button();
-            this.btDrawRecangle = new System.Windows.Forms.Button();
+            this.btnClear = new System.Windows.Forms.Button();
+            this.hasArrowCheckBox = new System.Windows.Forms.CheckBox();
+            this.drawPanel = new System.Windows.Forms.Panel();
+            this.lineStyleComboBox = new System.Windows.Forms.ComboBox();
+            this.labelY = new System.Windows.Forms.Label();
+            this.labelX = new System.Windows.Forms.Label();
+            this.textBoxX = new System.Windows.Forms.TextBox();
+            this.textBoxY = new System.Windows.Forms.TextBox();
             this.btDrawLine = new System.Windows.Forms.Button();
             this.mainPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainPanel
             // 
-            this.mainPanel.BackColor = System.Drawing.Color.White;
-            this.mainPanel.Controls.Add(this.btDrawMyCoordinate);
-            this.mainPanel.Controls.Add(this.btClear);
-            this.mainPanel.Controls.Add(this.btDrawArrow);
-            this.mainPanel.Controls.Add(this.btDrawDashLineWithTwoDot);
-            this.mainPanel.Controls.Add(this.btDrawDashLineWithOneDot);
-            this.mainPanel.Controls.Add(this.btDrawDashLine);
-            this.mainPanel.Controls.Add(this.btDrawRecangle);
+            this.mainPanel.BackColor = System.Drawing.Color.LemonChiffon;
+            this.mainPanel.Controls.Add(this.btnClear);
+            this.mainPanel.Controls.Add(this.hasArrowCheckBox);
+            this.mainPanel.Controls.Add(this.drawPanel);
+            this.mainPanel.Controls.Add(this.lineStyleComboBox);
+            this.mainPanel.Controls.Add(this.labelY);
+            this.mainPanel.Controls.Add(this.labelX);
+            this.mainPanel.Controls.Add(this.textBoxX);
+            this.mainPanel.Controls.Add(this.textBoxY);
             this.mainPanel.Controls.Add(this.btDrawLine);
             this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainPanel.Location = new System.Drawing.Point(0, 0);
             this.mainPanel.Name = "mainPanel";
-            this.mainPanel.Size = new System.Drawing.Size(938, 450);
+            this.mainPanel.Size = new System.Drawing.Size(811, 480);
             this.mainPanel.TabIndex = 0;
-            this.mainPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseDown);
-            this.mainPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseMove);
-            this.mainPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mainPanel_MouseUp);
             // 
-            // btDrawMyCoordinate
+            // btnClear
             // 
-            this.btDrawMyCoordinate.Location = new System.Drawing.Point(817, 203);
-            this.btDrawMyCoordinate.Name = "btDrawMyCoordinate";
-            this.btDrawMyCoordinate.Size = new System.Drawing.Size(121, 23);
-            this.btDrawMyCoordinate.TabIndex = 7;
-            this.btDrawMyCoordinate.Text = "Draw MyCoordinate";
-            this.btDrawMyCoordinate.UseVisualStyleBackColor = true;
-            this.btDrawMyCoordinate.Click += new System.EventHandler(this.btDrawMyCoordinate_Click);
+            this.btnClear.Location = new System.Drawing.Point(13, 42);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(75, 23);
+            this.btnClear.TabIndex = 11;
+            this.btnClear.Text = "Clear";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.button1_Click);
             // 
-            // btClear
+            // hasArrowCheckBox
             // 
-            this.btClear.Location = new System.Drawing.Point(817, 174);
-            this.btClear.Name = "btClear";
-            this.btClear.Size = new System.Drawing.Size(121, 23);
-            this.btClear.TabIndex = 6;
-            this.btClear.Text = "Clear";
-            this.btClear.UseVisualStyleBackColor = true;
-            this.btClear.Click += new System.EventHandler(this.btClear_Click);
+            this.hasArrowCheckBox.AutoSize = true;
+            this.hasArrowCheckBox.Location = new System.Drawing.Point(12, 116);
+            this.hasArrowCheckBox.Name = "hasArrowCheckBox";
+            this.hasArrowCheckBox.Size = new System.Drawing.Size(81, 19);
+            this.hasArrowCheckBox.TabIndex = 10;
+            this.hasArrowCheckBox.Text = "Has Arrow";
+            this.hasArrowCheckBox.UseVisualStyleBackColor = true;
             // 
-            // btDrawArrow
+            // drawPanel
             // 
-            this.btDrawArrow.Location = new System.Drawing.Point(817, 145);
-            this.btDrawArrow.Name = "btDrawArrow";
-            this.btDrawArrow.Size = new System.Drawing.Size(121, 23);
-            this.btDrawArrow.TabIndex = 5;
-            this.btDrawArrow.Text = "Draw arrow";
-            this.btDrawArrow.UseVisualStyleBackColor = true;
-            this.btDrawArrow.Click += new System.EventHandler(this.btDrawArrow_Click);
+            this.drawPanel.BackColor = System.Drawing.Color.White;
+            this.drawPanel.Location = new System.Drawing.Point(112, 0);
+            this.drawPanel.Name = "drawPanel";
+            this.drawPanel.Size = new System.Drawing.Size(700, 480);
+            this.drawPanel.TabIndex = 9;
+            this.drawPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.drawPanel_MouseDown);
+            this.drawPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.drawPanel_MouseMove);
+            this.drawPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.drawPanel_MouseUp);
             // 
-            // btDrawDashLineWithTwoDot
+            // lineStyleComboBox
             // 
-            this.btDrawDashLineWithTwoDot.Location = new System.Drawing.Point(817, 87);
-            this.btDrawDashLineWithTwoDot.Name = "btDrawDashLineWithTwoDot";
-            this.btDrawDashLineWithTwoDot.Size = new System.Drawing.Size(121, 23);
-            this.btDrawDashLineWithTwoDot.TabIndex = 4;
-            this.btDrawDashLineWithTwoDot.Text = "Draw dashline 2 dot";
-            this.btDrawDashLineWithTwoDot.UseVisualStyleBackColor = true;
-            this.btDrawDashLineWithTwoDot.Click += new System.EventHandler(this.btDrawDashLineWithTwoDot_Click);
+            this.lineStyleComboBox.FormattingEnabled = true;
+            this.lineStyleComboBox.Items.AddRange(new object[] {
+            "Basic Line",
+            "Dash Line",
+            "Dash 1 dot Line",
+            "Dash 2 dot Line",
+            "Rectangle",
+            "Circle"});
+            this.lineStyleComboBox.Location = new System.Drawing.Point(12, 87);
+            this.lineStyleComboBox.Name = "lineStyleComboBox";
+            this.lineStyleComboBox.Size = new System.Drawing.Size(75, 23);
+            this.lineStyleComboBox.TabIndex = 8;
+            this.lineStyleComboBox.Text = "Basic Line";
             // 
-            // btDrawDashLineWithOneDot
+            // labelY
             // 
-            this.btDrawDashLineWithOneDot.Location = new System.Drawing.Point(817, 58);
-            this.btDrawDashLineWithOneDot.Name = "btDrawDashLineWithOneDot";
-            this.btDrawDashLineWithOneDot.Size = new System.Drawing.Size(121, 23);
-            this.btDrawDashLineWithOneDot.TabIndex = 3;
-            this.btDrawDashLineWithOneDot.Text = "Draw dashline 1 dot";
-            this.btDrawDashLineWithOneDot.UseVisualStyleBackColor = true;
-            this.btDrawDashLineWithOneDot.Click += new System.EventHandler(this.btDrawDashLineWithOneDot_Click);
+            this.labelY.AutoSize = true;
+            this.labelY.Location = new System.Drawing.Point(12, 416);
+            this.labelY.Name = "labelY";
+            this.labelY.Size = new System.Drawing.Size(14, 15);
+            this.labelY.TabIndex = 7;
+            this.labelY.Text = "Y";
             // 
-            // btDrawDashLine
+            // labelX
             // 
-            this.btDrawDashLine.Location = new System.Drawing.Point(817, 29);
-            this.btDrawDashLine.Name = "btDrawDashLine";
-            this.btDrawDashLine.Size = new System.Drawing.Size(121, 23);
-            this.btDrawDashLine.TabIndex = 2;
-            this.btDrawDashLine.Text = "Draw dashline";
-            this.btDrawDashLine.UseVisualStyleBackColor = true;
-            this.btDrawDashLine.Click += new System.EventHandler(this.btDrawDashLine_Click);
+            this.labelX.AutoSize = true;
+            this.labelX.BackColor = System.Drawing.Color.Transparent;
+            this.labelX.Location = new System.Drawing.Point(12, 384);
+            this.labelX.Name = "labelX";
+            this.labelX.Size = new System.Drawing.Size(14, 15);
+            this.labelX.TabIndex = 6;
+            this.labelX.Text = "X";
             // 
-            // btDrawRecangle
+            // textBoxX
             // 
-            this.btDrawRecangle.Location = new System.Drawing.Point(817, 116);
-            this.btDrawRecangle.Name = "btDrawRecangle";
-            this.btDrawRecangle.Size = new System.Drawing.Size(121, 23);
-            this.btDrawRecangle.TabIndex = 1;
-            this.btDrawRecangle.Text = "Draw Recangle";
-            this.btDrawRecangle.UseVisualStyleBackColor = true;
-            this.btDrawRecangle.Click += new System.EventHandler(this.drawRecangle_Click);
+            this.textBoxX.Location = new System.Drawing.Point(32, 381);
+            this.textBoxX.Name = "textBoxX";
+            this.textBoxX.Size = new System.Drawing.Size(55, 23);
+            this.textBoxX.TabIndex = 5;
+            // 
+            // textBoxY
+            // 
+            this.textBoxY.Location = new System.Drawing.Point(32, 413);
+            this.textBoxY.Name = "textBoxY";
+            this.textBoxY.Size = new System.Drawing.Size(55, 23);
+            this.textBoxY.TabIndex = 4;
             // 
             // btDrawLine
             // 
-            this.btDrawLine.Location = new System.Drawing.Point(817, 0);
+            this.btDrawLine.Location = new System.Drawing.Point(12, 12);
             this.btDrawLine.Name = "btDrawLine";
-            this.btDrawLine.Size = new System.Drawing.Size(121, 23);
+            this.btDrawLine.Size = new System.Drawing.Size(75, 23);
             this.btDrawLine.TabIndex = 0;
-            this.btDrawLine.Text = "Draw line";
+            this.btDrawLine.Text = "Draw";
             this.btDrawLine.UseVisualStyleBackColor = true;
             this.btDrawLine.Click += new System.EventHandler(this.btDrawLine_Click);
             // 
@@ -145,11 +154,12 @@ namespace KTDH
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(938, 450);
+            this.ClientSize = new System.Drawing.Size(811, 480);
             this.Controls.Add(this.mainPanel);
             this.Name = "Form1";
             this.Text = "Form1";
             this.mainPanel.ResumeLayout(false);
+            this.mainPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -158,13 +168,14 @@ namespace KTDH
 
         private System.Windows.Forms.Panel mainPanel;
         private System.Windows.Forms.Button btDrawLine;
-        private System.Windows.Forms.Button btDrawDashLineWithTwoDot;
-        private System.Windows.Forms.Button btDrawDashLineWithOneDot;
-        private System.Windows.Forms.Button btDrawDashLine;
-        private System.Windows.Forms.Button btDrawRecangle;
-        private System.Windows.Forms.Button btDrawArrow;
-        private System.Windows.Forms.Button btClear;
-        private System.Windows.Forms.Button btDrawMyCoordinate;
+        private System.Windows.Forms.Label labelY;
+        private System.Windows.Forms.Label labelX;
+        private System.Windows.Forms.TextBox textBoxX;
+        private System.Windows.Forms.TextBox textBoxY;
+        private System.Windows.Forms.ComboBox lineStyleComboBox;
+        private System.Windows.Forms.Panel drawPanel;
+        private System.Windows.Forms.CheckBox hasArrowCheckBox;
+        private System.Windows.Forms.Button btnClear;
     }
 }
 

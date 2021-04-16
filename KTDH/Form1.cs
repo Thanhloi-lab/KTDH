@@ -15,138 +15,238 @@ namespace KTDH
         Graphics graphics;
         private Point point1 = new Point(-1, -1);
         private Point point2 = new Point(-1, -1);
+        private bool isPoint1 = false;
+        private bool isPoint2 = false;
+        private bool drawLine = false;
+        private bool moving = false;
         private readonly Pen pen;
-        private readonly Pen eraser;
-        DrawOptions options = new DrawOptions();
+        private readonly Pen eraser; 
         public Form1()
         {
             InitializeComponent();
-            graphics = mainPanel.CreateGraphics();
-            //graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            pen = new Pen(Color.Black, 4);
-            eraser = new Pen(mainPanel.BackColor, 5);
+            graphics = drawPanel.CreateGraphics();
+            graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            pen = new Pen(Color.BlueViolet, 3);
+            eraser = new Pen(drawPanel.BackColor, 5);
             eraser.StartCap = eraser.EndCap = pen.StartCap = pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                    
         }
         private void DrawCenterMyCoordinate()
         {
+            EraseMyCoordinate();
             List<Point> axis = MyCoordinate.DrawMyCoordinateAxis();
             List<Point> netPixel = MyCoordinate.DrawNetPixel();
             Pen redPen = new Pen(Color.Red, 5);
-            Pen blackPen = new Pen(Color.Black, 1);
-
+            Pen grayPen = new Pen(Color.LightGray, 1);
+            
             for (int i = 0; i < netPixel.Count - 1; i++)
             {
                 if (netPixel.ElementAt(i).X == netPixel.ElementAt(i + 1).X
                     || netPixel.ElementAt(i).Y == netPixel.ElementAt(i + 1).Y)
                 {
-                    graphics.DrawLine(blackPen, netPixel.ElementAt(i), netPixel.ElementAt(i + 1));
+                    graphics.DrawLine(grayPen, netPixel.ElementAt(i), netPixel.ElementAt(i + 1));
                 }
             }
-            //EraseMyCoordinate();
-            for (int i = 0; i < axis.Count - 1; i++)
-            {
-                if (axis.ElementAt(i).X == axis.ElementAt(i + 1).X
-                    || axis.ElementAt(i).Y == axis.ElementAt(i + 1).Y)
-                {
-                    graphics.DrawLine(redPen, axis.ElementAt(i), axis.ElementAt(i + 1));
-                }
-            }
+            EraseCenterMyCoordinate();
+            graphics.DrawLine(redPen, new Point(MyCoordinate.centerPoint.X, 0), new Point(MyCoordinate.centerPoint.X, MyCoordinate.centerPoint.Y * 2));
+            graphics.DrawLine(redPen, new Point(0, MyCoordinate.centerPoint.Y), new Point(MyCoordinate.centerPoint.X * 2, MyCoordinate.centerPoint.Y));
         }
+
+        private void EraseCenterMyCoordinate()
+        {
+            List<Point> points = MyCoordinate.DrawMyCoordinateAxis();
+
+            graphics.DrawLine(eraser, new Point(MyCoordinate.centerPoint.X, 0), new Point(MyCoordinate.centerPoint.X, MyCoordinate.centerPoint.Y * 2));
+            graphics.DrawLine(eraser, new Point(0, MyCoordinate.centerPoint.Y), new Point(MyCoordinate.centerPoint.X * 2, MyCoordinate.centerPoint.Y));
+        }
+
         private void EraseMyCoordinate()
         {
-            graphics.Clear(mainPanel.BackColor);
-            foreach (var item in mainPanel.Controls.OfType<Label>().ToList())
+            graphics.Clear(drawPanel.BackColor);
+            foreach (var item in drawPanel.Controls.OfType<Label>().ToList())
             {
-                mainPanel.Controls.Remove(item as Label);
+                drawPanel.Controls.Remove(item as Label);
             }
         }
-        private void mainPanel_MouseMove(object sender, MouseEventArgs e)
+
+        private void btDrawLine_Click(object sender, EventArgs e)
+        {
+
+            if (drawLine)
+            {
+                drawLine = false;
+                EraseMyCoordinate();
+            }       
+            else
+            {
+                drawLine = true;
+                DrawCenterMyCoordinate();
+                
+            }   
+        }
+
+        private void drawPanel_MouseUp(object sender, MouseEventArgs e)
         {
             //cai nay chuc nang khac
-            if (options.Moving && point1.X != -1 && point1.Y != -1 && options.DrawLine == false)
+            if (drawLine == false)
+            {
+                moving = false;
+                point1.X = -1;
+                point1.Y = -1;
+            }
+        }
+
+        private void drawPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            //cai nay chuc nang khac
+            if (moving && point1.X != -1 && point1.Y != -1 && drawLine == false)
             {
                 graphics.DrawLine(pen, point1, e.Location);
                 point1.X = e.X;
                 point1.Y = e.Y;
             }
         }
-        private void mainPanel_MouseUp(object sender, MouseEventArgs e)
+
+        private void drawPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            //cai nay chuc nang khac
-            if (options.DrawLine == false && !options.DrawRecangle)
-            {
-                options.Moving = false;
-                point1.X = -1;
-                point1.Y = -1;
-            }
-        }
-        private void mainPanel_MouseDown(object sender, MouseEventArgs e)
-        {
-            Label label = new Label();
-            Point point = new Point(e.X, e.Y);
-            label.Location = new Point(e.X+10, e.Y);
-            //label.Text = "(" + MyCoordinate.ConvertToMyPoint(point).X + ", " + MyCoordinate.ConvertToMyPoint(point).Y + ")";
-            label.Text = "(" + e.X + ", " + e.Y + ")";
-            label.SendToBack();
-            label.ForeColor = Color.Red;
-            label.AutoSize = true;
-            mainPanel.Controls.Add(label);
-            label.Show();
+            
             // xu ly ve doan thang
-            if (!options.DrawLine && !options.DrawRecangle)
+            if (drawLine == false)
             {
-                options.Moving = true;
+                moving = true;
                 point1.X = e.X;
                 point1.Y = e.Y;
             }
             else
             {
-                if (options.IsPoint1 == false)
+                Label label = new Label();
+                Point point = MyCoordinate.ConvertToMyPoint(new Point(e.X, e.Y));
+                label.Location = new Point(e.X + 10, e.Y);
+                label.Text = "(" + MyCoordinate.ConvertToMyPoint(point).X + ", " + MyCoordinate.ConvertToMyPoint(point).Y + ")";
+                label.Text = "(" + point.X + ", " + point.Y + ")";
+                label.SendToBack();
+                label.ForeColor = Color.Red;
+                label.AutoSize = true;
+                drawPanel.Controls.Add(label);
+                label.Show();
+                if (isPoint1 == false)
                 {
                     point1.X = e.X;
                     point1.Y = e.Y;
-                    options.IsPoint1 = true;
+                    isPoint1 = true;
+                    Point showPoint = MyCoordinate.ConvertToMyPoint(point1);
+                    textBoxX.Text = showPoint.X.ToString();
+                    textBoxY.Text = showPoint.Y.ToString();
                 }
-                else if (options.IsPoint1 && !options.IsPoint2 && options.DrawLine)
+                else if (isPoint1 && !isPoint2)
                 {
                     point2.X = e.X;
                     point2.Y = e.Y;
-                    options.IsPoint2 = true;
-                    List<Point> points = DrawLine.DDA(point1, point2);
-                    DrawLineWithOption(points);
-                    DrawArrow(graphics, point1, point2, 3);
-                    options.IsPoint1 = options.IsPoint2 = false;
-                }
-                else if (options.IsPoint1 && !options.IsPoint2 && options.DrawRecangle)
-                {
-                    point2.X = e.X;
-                    point2.Y = e.Y;
-                    options.IsPoint2 = true;
-                    List<Point> points = DrawRecangle.DDA(point1, point2);
-                    DrawLineWithOption(points);
-                    options.IsPoint1 = options.IsPoint2 = false;
+                    isPoint2 = true;
+                    Point showPoint = MyCoordinate.ConvertToMyPoint(point2);
+                    textBoxX.Text = showPoint.X.ToString();
+                    textBoxY.Text = showPoint.Y.ToString();
+                    Point firstPoint = point1;
+                    Point seccondPoint = point2;
+                    List<Point> points = DrawLine.DDA(firstPoint, seccondPoint);
+                    
+                    switch(lineStyleComboBox.SelectedIndex)
+                    {
+                        case 0:
+                            {
+                                DrawBasicLine(points,graphics,pen);
+                                if (hasArrowCheckBox.Checked)
+                                    DrawArrow(graphics, point1, point2, 3);
+                                break;
+                            }
+                        case 1:
+                            {
+                                DrawDashLine(points, graphics, pen);
+                                if (hasArrowCheckBox.Checked)
+                                    DrawArrow(graphics, point1, point2, 3);
+
+                                break;
+                            }
+                        case 2:
+                            {
+                                DrawDashedLineWithOneDot(points, graphics, pen);
+                                if (hasArrowCheckBox.Checked)
+                                    DrawArrow(graphics, point1, point2, 3);
+
+                                break;
+                            }
+                        case 3:
+                            {
+                                DrawDashLineWithTwoDot(points, graphics, pen);
+                                if (hasArrowCheckBox.Checked)
+                                   DrawArrow(graphics, point1, point2, 3);
+                                break;
+                            }
+                        case 4:
+                            {
+                                List<Point> rectPoints = DrawRecangle.DDA(point1, point2);
+                                DrawBasicLine(rectPoints, graphics, pen);
+                                break;
+                            }
+                        case 5:
+                            {
+                                graphics.DrawRectangle(pen, new Rectangle(point1.X, point1.Y, 1, 1));
+                                double arrowLength = Math.Sqrt(Math.Pow(Math.Abs(point1.X - point2.X), 2) +
+                                           Math.Pow(Math.Abs(point1.Y - point2.Y), 2));
+                                int arrowLengthFixed = 0;
+                                if (arrowLength % MyCoordinate.scale < 3)
+                                    arrowLengthFixed = (int)Math.Round(arrowLength) - (int)Math.Round(arrowLength) % MyCoordinate.scale;
+                                else
+                                    arrowLengthFixed = (int)Math.Round(arrowLength) - (int)Math.Round(arrowLength) % MyCoordinate.scale + MyCoordinate.scale;
+
+                                List<Point> circlePoints = DrawCircle.DDA(point1.X, point1.Y, arrowLengthFixed);
+                                List<Point> circlePointsFixed = new List<Point>();
+
+                                for (int i = 0; i < circlePoints.Count - 1; i++)
+                                {
+                                    Point pointI = circlePoints.ElementAt(i);
+                                    Point pointI1 = circlePoints.ElementAt(i +1);
+                                    if ((FixedY(pointI.Y) == FixedY(pointI1.Y)
+                                        && (pointI.Y <= point.Y  + (int)(arrowLengthFixed/Math.Sqrt(2))
+                                        || pointI.Y >= point.Y - (int)(arrowLengthFixed/Math.Sqrt(2)))
+                                        || (FixedY(pointI.Y) != FixedY(pointI1.Y))))
+                                    {
+                                        circlePointsFixed.Add(new Point(FixedX(circlePoints.ElementAt(i).X), FixedY(circlePoints.ElementAt(i).Y)));
+                                    }
+                                }
+                                DrawBasicLine(circlePointsFixed, graphics, pen);
+                                break;
+                            }
+
+                        default:
+                            break;
+                    }
+                    
+                    isPoint1 = isPoint2 = false;
                 }
             }
         }
-        private void DrawLineWithOption(List<Point> points)
+        private int FixedX(int x)
         {
-            if (options.DrawBasicLine)
-            {
-                DrawBasicLine(points, graphics, pen);
-            }
-            else if (options.DrawDashLine)
-            {
-                DrawDashLine(points, graphics, pen);
-            }
-            else if (options.DrawDashLineWithOneDot)
-            {
-                DrawDashedLineWithOneDot(points, graphics, pen);
-            }
-            else if (options.DrawDashLineWithTwoDot)
-            {
-                DrawDashLineWithTwoDot(points, graphics, pen);
-            }
+
+                if (x % MyCoordinate.scale < 3)
+                    x = x - x % MyCoordinate.scale;
+                else
+                    x = x - x % MyCoordinate.scale + MyCoordinate.scale;
+
+            return x;
         }
+        private int FixedY(int y)
+        {
+
+                if (y % MyCoordinate.scale < 3)
+                    y = y - y % MyCoordinate.scale;
+                else
+                    y = y - y % MyCoordinate.scale + MyCoordinate.scale;
+
+            return y;
+        }
+
         public void DrawDashedLineWithOneDot(List<Point> points, Graphics graphics, Pen pen)
         {
             int count = 0;
@@ -157,7 +257,7 @@ namespace KTDH
                 if (line != DrawLine.Line)
                 {
                     Point point = points.ElementAt(i);
-                    graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
+                    graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
                     line++;
                 }
                 else
@@ -166,7 +266,7 @@ namespace KTDH
                     if (count == DrawLine.Space && countSpace == 0)
                     {
                         Point point = points.ElementAt(i);
-                        graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
+                        graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
                         countSpace++;
                         count = 0;
                     }
@@ -188,7 +288,7 @@ namespace KTDH
                 if (inLine != DrawLine.Line)
                 {
                     Point point = points.ElementAt(i);
-                    graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
+                    graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
                     inLine++;
                 }
                 else
@@ -197,7 +297,7 @@ namespace KTDH
                     if (count == DrawLine.Space && countSpace == 0)
                     {
                         Point point = points.ElementAt(i);
-                        graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
+                        graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
                         countSpace++;
                         count = 0;
                     }
@@ -223,7 +323,7 @@ namespace KTDH
                 if (inLine != DrawLine.Line)
                 {
                     Point point = points.ElementAt(i);
-                    graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
+                    graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
                     inLine++;
                 }
                 else
@@ -238,11 +338,55 @@ namespace KTDH
         }
         public void DrawBasicLine(List<Point> points, Graphics graphics, Pen pen)
         {
-            for (int i = 0; i < points.Count - 1; i += MyCoordinate.scale)
+            if(lineStyleComboBox.SelectedIndex==5)
             {
-                Point point = points.ElementAt(i);
-                graphics.DrawLine(pen, points.ElementAt(i), points.ElementAt(i + 1));
+
+                for (int i = 0; i < points.Count; i += MyCoordinate.scale)
+                {
+                    Point point = points.ElementAt(i);
+
+                    //point.X = FixedX(point.X);
+
+                    //point.Y = FixedY(point.Y);
+                    graphics.DrawRectangle(pen, new Rectangle(point.X+4, point.Y+4, 1, 1));
+                }
             }
+            else
+            {
+                for (int i = 0; i < points.Count; i += MyCoordinate.scale)
+                {
+                    Point point = points.ElementAt(i);
+                    graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
+                }
+            }
+        }
+
+        private void DrawFixedArrow(Graphics g, PointF ArrowStart, PointF ArrowEnd)
+        {
+            double x1, x2, y1, y2;
+            double arrowLength = 20, arrowDegrees = 0.4;
+            double angle = Math.Atan2(ArrowEnd.Y - ArrowStart.Y, ArrowEnd.X - ArrowStart.X) + Math.PI;
+            x1 = ArrowEnd.X + arrowLength * Math.Cos(angle - arrowDegrees);
+            y1 = ArrowEnd.Y + arrowLength * Math.Sin(angle - arrowDegrees);
+            x2 = ArrowEnd.X + arrowLength * Math.Cos(angle + arrowDegrees);
+            y2 = ArrowEnd.Y + arrowLength * Math.Sin(angle + arrowDegrees);
+            int x4 = (int)((x1 + x2 + ArrowEnd.X) / 3);
+            int y4 = (int)((y1 + y2 + ArrowEnd.Y) / 3);
+            List<Point> points = new List<Point>();
+            List<Point> temp = new List<Point>();
+            Point arrowPoint1 = new Point((int)x1, (int)y1);
+            Point arrowPoint2 = new Point((int)x2, (int)y2);
+            Point arrowPoint3 = new Point((int)ArrowEnd.X, (int)ArrowEnd.Y);
+
+            temp = DrawLine.DDA(arrowPoint1, arrowPoint2);
+            points.AddRange(temp);
+            temp = DrawLine.DDA(arrowPoint2, arrowPoint3);
+            points.AddRange(temp);
+            temp = DrawLine.DDA(arrowPoint3, arrowPoint1);
+            points.AddRange(temp);
+
+            Pen arrowPen = new Pen(Color.BlueViolet,4);
+            DrawBasicLine(points, g, arrowPen);
         }
         private void DrawArrow(Graphics g, PointF ArrowStart, PointF ArrowEnd, int ArrowMultiplier)
         {
@@ -341,119 +485,31 @@ namespace KTDH
             arrowPoints[1] = arrowPointLeft;
             arrowPoints[2] = arrowPointBack;
             arrowPoints[3] = arrowPointRight;
-            Point arrowPointInt = new Point((int)arrowPoint.X, (int)arrowPoint.Y);
-            Point arrowPointBackInt = new Point((int)arrowPointBack.X, (int)arrowPointBack.Y);
-            Point arrowPointLeftInt = new Point((int)arrowPointLeft.X, (int)arrowPointLeft.Y);
-            Point arrowPointRightInt = new Point((int)arrowPointRight.X, (int)arrowPointRight.Y);
+            Point arrowPointInt = new Point((int)Math.Round(arrowPoint.X), (int)Math.Round(arrowPoint.Y));
+            Point arrowPointBackInt = new Point((int)Math.Round(arrowPointBack.X), (int)Math.Round(arrowPointBack.Y));
+            Point arrowPointLeftInt = new Point((int)Math.Round(arrowPointLeft.X), (int)Math.Round(arrowPointLeft.Y));
+            Point arrowPointRightInt = new Point((int)Math.Round(arrowPointRight.X), (int)Math.Round(arrowPointRight.Y));
 
-            List<Point> points =  DrawLine.DDA(arrowPointInt, arrowPointLeftInt);
+            List<Point> points = DrawLine.DDA(arrowPointInt, arrowPointLeftInt);
             DrawBasicLine(points, g, pen);
 
             points = DrawLine.DDA(arrowPointInt, arrowPointRightInt);
             DrawBasicLine(points, g, pen);
 
-            points = DrawLine.DDA(arrowPointLeftInt, arrowPointRightInt);
+            points = DrawLine.DDA(arrowPointLeftInt, arrowPointBackInt);
+            DrawBasicLine(points, g, pen);
+            
+            points = DrawLine.DDA(arrowPointRightInt, arrowPointBackInt);
             DrawBasicLine(points, g, pen);
 
             //draw the outline
             //g.DrawPolygon(pen, arrowPoints);
 
             //fill the polygon
-            //g.FillPolygon(new SolidBrush(ArrowColor), arrowPoints);
+            //g.FillPolygon(new SolidBrush(pen.Color), arrowPoints);
         }
-        private void btDrawLine_Click(object sender, EventArgs e)
-        {
-            if (options.DrawLine)
-            {
-                options.AllOptionsExceptLineOptionsOff();
-                options.AllDrawLineOptionsOff();
-            }
-            else
-            {
-                options.AllOptionsExceptLineOptionsOff();
-                options.AllDrawLineOptionsOff();
-                options.DrawLine = true;
-                options.DrawBasicLine = true;
-            }
-        }
-        private void drawRecangle_Click(object sender, EventArgs e)
-        {
-            if (options.DrawRecangle)
-            {
-                options.AllOptionsExceptLineOptionsOff();
-                options.AllDrawLineOptionsOff();
-            }
-            else
-            {
-                options.AllOptionsExceptLineOptionsOff();
-                options.DrawRecangle = true;
-            }
-        }
-        private void btDrawDashLine_Click(object sender, EventArgs e)
-        {
-            if (options.DrawDashLine)
-            {
-                options.AllOptionsExceptLineOptionsOff();
-                options.AllDrawLineOptionsOff();
-            }
-            else if (!options.DrawDashLine)
-            {
-                options.AllOptionsExceptLineOptionsOff();
-                options.AllDrawLineOptionsOff();
-                options.DrawLine = true;
-                options.DrawDashLine = true;
-            }
-        }
-        private void btDrawDashLineWithOneDot_Click(object sender, EventArgs e)
-        {
-            if (options.DrawDashLineWithOneDot)
-            {
-                options.AllOptionsExceptLineOptionsOff();
-                options.AllDrawLineOptionsOff();
-            }
-            else if (!options.DrawDashLineWithOneDot)
-            {
-                options.AllOptionsExceptLineOptionsOff();
-                options.AllDrawLineOptionsOff();
-                options.DrawLine = true;
-                options.DrawDashLineWithOneDot = true;
-            }
-        }
-        private void btDrawDashLineWithTwoDot_Click(object sender, EventArgs e)
-        {
-            if (options.DrawDashLineWithTwoDot)
-            {
-                options.AllOptionsExceptLineOptionsOff();
-                options.AllDrawLineOptionsOff();
-            }
-            else if (!options.DrawDashLineWithTwoDot)
-            {
-                options.AllOptionsExceptLineOptionsOff();
-                options.AllDrawLineOptionsOff();
-                options.DrawLine = true;
-                options.DrawDashLineWithTwoDot = true;
-            }
-        }
-        private void btDrawArrow_Click(object sender, EventArgs e)
-        {
-            if (options.DrawLine)
-            {
-                options.AllOptionsExceptLineOptionsOff();
-                options.AllDrawLineOptionsOff();
-            }
-            else
-            {
-                options.AllOptionsExceptLineOptionsOff();
-                options.AllDrawLineOptionsOff();
-                options.DrawLine = true;
-                options.DrawArrow = true;
-            }
-        }
-        private void btClear_Click(object sender, EventArgs e)
-        {
-            EraseMyCoordinate();
-        }
-        private void btDrawMyCoordinate_Click(object sender, EventArgs e)
+
+        private void button1_Click(object sender, EventArgs e)
         {
             DrawCenterMyCoordinate();
         }
