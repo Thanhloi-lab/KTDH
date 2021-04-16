@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Text;
 
 namespace KTDH
@@ -16,6 +15,7 @@ namespace KTDH
 
         public static List<Point> DDA(Point point1, Point point2)
         {
+            int scale = MyCoordinate.scale;
             List<Point> points = new List<Point>();
 
             int dx = point2.X - point1.X;
@@ -31,17 +31,16 @@ namespace KTDH
             // Put pixel for each step
             float X = point1.X;
             float Y = point1.Y;
-            for (int i = 0; i <= steps; i++)
+            for (int i = 0; i <= steps+1; i++)
             {
                 Point point = new Point();
-                point.X = (int)X;
-                point.Y = (int)Y;
+                point.X = (int)Math.Round(X / scale) * scale - 1;
+                point.Y = (int)Math.Round(Y / scale) * scale - 1;
                 points.Add(point);
                 X += Xinc;           // increment in x at each step
                 Y += Yinc;           // increment in y at each step
             }
             return points;
         }
-        
     }
 }

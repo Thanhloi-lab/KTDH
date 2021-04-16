@@ -68,7 +68,7 @@ namespace KTDH
             this.btnClear.TabIndex = 11;
             this.btnClear.Text = "Clear";
             this.btnClear.UseVisualStyleBackColor = true;
-            this.btnClear.Click += new System.EventHandler(this.button1_Click);
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
             // hasArrowCheckBox
             // 
@@ -89,7 +89,6 @@ namespace KTDH
             this.drawPanel.TabIndex = 9;
             this.drawPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.drawPanel_MouseDown);
             this.drawPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.drawPanel_MouseMove);
-            this.drawPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.drawPanel_MouseUp);
             // 
             // lineStyleComboBox
             // 

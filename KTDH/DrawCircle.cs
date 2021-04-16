@@ -39,5 +39,52 @@ namespace KTDH
             } while ((y1 - y) < k || (x - x1) > k);
             return points;
         }
+
+        private static List<Point> get8Point(int x0, int y0, int x, int y)
+        {
+            int scale = MyCoordinate.scale;
+            x0 = (int)(x0 / scale) * scale + 1;
+            y0 = (int)(y0 / scale) * scale - 1;
+            x = (int)(x / scale) * scale +1;
+            y = (int)(y / scale) * scale -1;
+
+            List<Point> points = new List<Point>();
+            points.Add(new Point(x0 + x, y0 + y));
+            points.Add(new Point(x0 - x, y0 + y));
+            points.Add(new Point(x0 + x, y0 - y));
+            points.Add(new Point(x0 - x, y0 - y));
+            points.Add(new Point(x0 + y, y0 + x));
+            points.Add(new Point(x0 - y, y0 + x));
+            points.Add(new Point(x0 + y, y0 - x));
+            points.Add(new Point(x0 - y, y0 - x));
+            return points;
+        }
+        public static List<Point> circleBrese(int x0, int y0, int r)
+        {
+            int scale = MyCoordinate.scale;
+
+            List<Point> points = new List<Point>();
+            Point centerPoint = new Point((int)(x0 / scale) * scale + 1, (int)(y0 / scale) * scale - 1);
+            points.Add(centerPoint);
+            int x = 0; int y = r;
+            int p = 3 - 2 * r;
+
+            while (x <= y)
+            {
+                points.AddRange(get8Point(x0, y0, x, y));
+
+                if (p < 0)
+                {
+                    p = p + 4 * x + 6;
+                }
+                else
+                {
+                    p = p + 4 * (x - y) + 10;
+                    y = y - 1;
+                }
+                x = x + 1;
+            }
+            return points;
+        }
     }
 }

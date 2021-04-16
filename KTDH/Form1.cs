@@ -85,17 +85,6 @@ namespace KTDH
             }   
         }
 
-        private void drawPanel_MouseUp(object sender, MouseEventArgs e)
-        {
-            //cai nay chuc nang khac
-            if (drawLine == false)
-            {
-                moving = false;
-                point1.X = -1;
-                point1.Y = -1;
-            }
-        }
-
         private void drawPanel_MouseMove(object sender, MouseEventArgs e)
         {
             //cai nay chuc nang khac
@@ -190,31 +179,34 @@ namespace KTDH
                             }
                         case 5:
                             {
-                                graphics.DrawRectangle(pen, new Rectangle(point1.X, point1.Y, 1, 1));
-                                double arrowLength = Math.Sqrt(Math.Pow(Math.Abs(point1.X - point2.X), 2) +
-                                           Math.Pow(Math.Abs(point1.Y - point2.Y), 2));
-                                int arrowLengthFixed = 0;
-                                if (arrowLength % MyCoordinate.scale < 3)
-                                    arrowLengthFixed = (int)Math.Round(arrowLength) - (int)Math.Round(arrowLength) % MyCoordinate.scale;
-                                else
-                                    arrowLengthFixed = (int)Math.Round(arrowLength) - (int)Math.Round(arrowLength) % MyCoordinate.scale + MyCoordinate.scale;
+                                int radius = (int)Math.Sqrt(Math.Pow(point2.X - point1.X, 2) + Math.Pow(point2.Y - point1.Y, 2));
+                                List<Point> circlePoints = DrawCircle.circleBrese(point1.X, point1.Y, radius);
+                                DrawMyCircle(circlePoints, graphics, pen);
+                                //graphics.DrawRectangle(pen, new Rectangle(point1.X, point1.Y, 1, 1));
+                                //double arrowLength = Math.Sqrt(Math.Pow(Math.Abs(point1.X - point2.X), 2) +
+                                //           Math.Pow(Math.Abs(point1.Y - point2.Y), 2));
+                                //int arrowLengthFixed = 0;
+                                //if (arrowLength % MyCoordinate.scale < 3)
+                                //    arrowLengthFixed = (int)Math.Round(arrowLength) - (int)Math.Round(arrowLength) % MyCoordinate.scale;
+                                //else
+                                //    arrowLengthFixed = (int)Math.Round(arrowLength) - (int)Math.Round(arrowLength) % MyCoordinate.scale + MyCoordinate.scale;
 
-                                List<Point> circlePoints = DrawCircle.DDA(point1.X, point1.Y, arrowLengthFixed);
-                                List<Point> circlePointsFixed = new List<Point>();
+                                //List<Point> circlePoints = DrawCircle.DDA(point1.X, point1.Y, arrowLengthFixed);
+                                //List<Point> circlePointsFixed = new List<Point>();
 
-                                for (int i = 0; i < circlePoints.Count - 1; i++)
-                                {
-                                    Point pointI = circlePoints.ElementAt(i);
-                                    Point pointI1 = circlePoints.ElementAt(i +1);
-                                    if ((FixedY(pointI.Y) == FixedY(pointI1.Y)
-                                        && (pointI.Y <= point.Y  + (int)(arrowLengthFixed/Math.Sqrt(2))
-                                        || pointI.Y >= point.Y - (int)(arrowLengthFixed/Math.Sqrt(2)))
-                                        || (FixedY(pointI.Y) != FixedY(pointI1.Y))))
-                                    {
-                                        circlePointsFixed.Add(new Point(FixedX(circlePoints.ElementAt(i).X), FixedY(circlePoints.ElementAt(i).Y)));
-                                    }
-                                }
-                                DrawBasicLine(circlePointsFixed, graphics, pen);
+                                //for (int i = 0; i < circlePoints.Count - 1; i++)
+                                //{
+                                //    Point pointI = circlePoints.ElementAt(i);
+                                //    Point pointI1 = circlePoints.ElementAt(i +1);
+                                //    if ((FixedY(pointI.Y) == FixedY(pointI1.Y)
+                                //        && (pointI.Y <= point.Y  + (int)(arrowLengthFixed/Math.Sqrt(2))
+                                //        || pointI.Y >= point.Y - (int)(arrowLengthFixed/Math.Sqrt(2)))
+                                //        || (FixedY(pointI.Y) != FixedY(pointI1.Y))))
+                                //    {
+                                //        circlePointsFixed.Add(new Point(FixedX(circlePoints.ElementAt(i).X), FixedY(circlePoints.ElementAt(i).Y)));
+                                //    }
+                                //}
+                                //DrawBasicLine(circlePointsFixed, graphics, pen);
                                 break;
                             }
 
@@ -361,32 +353,13 @@ namespace KTDH
             }
         }
 
-        private void DrawFixedArrow(Graphics g, PointF ArrowStart, PointF ArrowEnd)
+        private void DrawMyCircle(List<Point> points, Graphics graphics, Pen pen)
         {
-            double x1, x2, y1, y2;
-            double arrowLength = 20, arrowDegrees = 0.4;
-            double angle = Math.Atan2(ArrowEnd.Y - ArrowStart.Y, ArrowEnd.X - ArrowStart.X) + Math.PI;
-            x1 = ArrowEnd.X + arrowLength * Math.Cos(angle - arrowDegrees);
-            y1 = ArrowEnd.Y + arrowLength * Math.Sin(angle - arrowDegrees);
-            x2 = ArrowEnd.X + arrowLength * Math.Cos(angle + arrowDegrees);
-            y2 = ArrowEnd.Y + arrowLength * Math.Sin(angle + arrowDegrees);
-            int x4 = (int)((x1 + x2 + ArrowEnd.X) / 3);
-            int y4 = (int)((y1 + y2 + ArrowEnd.Y) / 3);
-            List<Point> points = new List<Point>();
-            List<Point> temp = new List<Point>();
-            Point arrowPoint1 = new Point((int)x1, (int)y1);
-            Point arrowPoint2 = new Point((int)x2, (int)y2);
-            Point arrowPoint3 = new Point((int)ArrowEnd.X, (int)ArrowEnd.Y);
-
-            temp = DrawLine.DDA(arrowPoint1, arrowPoint2);
-            points.AddRange(temp);
-            temp = DrawLine.DDA(arrowPoint2, arrowPoint3);
-            points.AddRange(temp);
-            temp = DrawLine.DDA(arrowPoint3, arrowPoint1);
-            points.AddRange(temp);
-
-            Pen arrowPen = new Pen(Color.BlueViolet,4);
-            DrawBasicLine(points, g, arrowPen);
+            for (int i = 0; i < points.Count; i += MyCoordinate.scale)
+            {
+                Point point = points.ElementAt(i);
+                graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
+            }
         }
         private void DrawArrow(Graphics g, PointF ArrowStart, PointF ArrowEnd, int ArrowMultiplier)
         {
@@ -509,7 +482,7 @@ namespace KTDH
             //g.FillPolygon(new SolidBrush(pen.Color), arrowPoints);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnClear_Click(object sender, EventArgs e)
         {
             DrawCenterMyCoordinate();
         }
