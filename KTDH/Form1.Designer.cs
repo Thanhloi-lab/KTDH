@@ -99,7 +99,8 @@ namespace KTDH
             "Dash 1 dot Line",
             "Dash 2 dot Line",
             "Rectangle",
-            "Circle"});
+            "Circle",
+            "Ellipse"});
             this.lineStyleComboBox.Location = new System.Drawing.Point(12, 87);
             this.lineStyleComboBox.Name = "lineStyleComboBox";
             this.lineStyleComboBox.Size = new System.Drawing.Size(75, 23);

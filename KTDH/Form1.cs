@@ -15,8 +15,10 @@ namespace KTDH
         Graphics graphics;
         private Point point1 = new Point(-1, -1);
         private Point point2 = new Point(-1, -1);
+        private Point centerPoint = new Point(-1, -1);
         private bool isPoint1 = false;
         private bool isPoint2 = false;
+        private bool isEllipseCenter = false;
         private bool drawLine = false;
         private bool moving = false;
         private readonly Pen pen;
@@ -126,6 +128,12 @@ namespace KTDH
                     Point showPoint = MyCoordinate.ConvertToMyPoint(point1);
                     textBoxX.Text = showPoint.X.ToString();
                     textBoxY.Text = showPoint.Y.ToString();
+                    if(isEllipseCenter == false && lineStyleComboBox.SelectedIndex == 6)
+                    {
+                        centerPoint = point1;
+                        isPoint1 = false;
+                        isEllipseCenter = true;
+                    }
                 }
                 else if (isPoint1 && !isPoint2)
                 {
@@ -143,7 +151,7 @@ namespace KTDH
                     {
                         case 0:
                             {
-                                DrawBasicLine(points,graphics,pen);
+                                DrawMyShape(points,graphics,pen);
                                 if (hasArrowCheckBox.Checked)
                                     DrawArrow(graphics, point1, point2, 3);
                                 break;
@@ -174,14 +182,14 @@ namespace KTDH
                         case 4:
                             {
                                 List<Point> rectPoints = DrawRecangle.DDA(point1, point2);
-                                DrawBasicLine(rectPoints, graphics, pen);
+                                DrawMyShape(rectPoints, graphics, pen);
                                 break;
                             }
                         case 5:
                             {
                                 int radius = (int)Math.Sqrt(Math.Pow(point2.X - point1.X, 2) + Math.Pow(point2.Y - point1.Y, 2));
                                 List<Point> circlePoints = DrawCircle.circleBrese(point1.X, point1.Y, radius);
-                                DrawMyCircle(circlePoints, graphics, pen);
+                                DrawMyShape(circlePoints, graphics, pen);
                                 //graphics.DrawRectangle(pen, new Rectangle(point1.X, point1.Y, 1, 1));
                                 //double arrowLength = Math.Sqrt(Math.Pow(Math.Abs(point1.X - point2.X), 2) +
                                 //           Math.Pow(Math.Abs(point1.Y - point2.Y), 2));
@@ -207,6 +215,15 @@ namespace KTDH
                                 //    }
                                 //}
                                 //DrawBasicLine(circlePointsFixed, graphics, pen);
+                                break;
+                            }
+                        case 6:
+                            {
+                                int radiusX = (int)Math.Sqrt(Math.Pow(point1.X - centerPoint.X, 2) + Math.Pow(point1.Y - centerPoint.Y, 2));
+                                int radiusY = (int)Math.Sqrt(Math.Pow(point2.X - centerPoint.X, 2) + Math.Pow(point2.Y - centerPoint.Y, 2)); ;
+                                List<Point> ellipsePoint = DrawEllipse.MidPoint(centerPoint, radiusX, radiusY);
+                                DrawMyShape(ellipsePoint, graphics, pen);
+                                isEllipseCenter = false;
                                 break;
                             }
 
@@ -328,32 +345,7 @@ namespace KTDH
                 }
             }
         }
-        public void DrawBasicLine(List<Point> points, Graphics graphics, Pen pen)
-        {
-            if(lineStyleComboBox.SelectedIndex==5)
-            {
-
-                for (int i = 0; i < points.Count; i += MyCoordinate.scale)
-                {
-                    Point point = points.ElementAt(i);
-
-                    //point.X = FixedX(point.X);
-
-                    //point.Y = FixedY(point.Y);
-                    graphics.DrawRectangle(pen, new Rectangle(point.X+4, point.Y+4, 1, 1));
-                }
-            }
-            else
-            {
-                for (int i = 0; i < points.Count; i += MyCoordinate.scale)
-                {
-                    Point point = points.ElementAt(i);
-                    graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
-                }
-            }
-        }
-
-        private void DrawMyCircle(List<Point> points, Graphics graphics, Pen pen)
+        private void DrawMyShape(List<Point> points, Graphics graphics, Pen pen)
         {
             for (int i = 0; i < points.Count; i += MyCoordinate.scale)
             {
@@ -361,6 +353,7 @@ namespace KTDH
                 graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
             }
         }
+
         private void DrawArrow(Graphics g, PointF ArrowStart, PointF ArrowEnd, int ArrowMultiplier)
         {
 
@@ -464,16 +457,16 @@ namespace KTDH
             Point arrowPointRightInt = new Point((int)Math.Round(arrowPointRight.X), (int)Math.Round(arrowPointRight.Y));
 
             List<Point> points = DrawLine.DDA(arrowPointInt, arrowPointLeftInt);
-            DrawBasicLine(points, g, pen);
+            DrawMyShape(points, g, pen);
 
             points = DrawLine.DDA(arrowPointInt, arrowPointRightInt);
-            DrawBasicLine(points, g, pen);
+            DrawMyShape(points, g, pen);
 
             points = DrawLine.DDA(arrowPointLeftInt, arrowPointBackInt);
-            DrawBasicLine(points, g, pen);
+            DrawMyShape(points, g, pen);
             
             points = DrawLine.DDA(arrowPointRightInt, arrowPointBackInt);
-            DrawBasicLine(points, g, pen);
+            DrawMyShape(points, g, pen);
 
             //draw the outline
             //g.DrawPolygon(pen, arrowPoints);
