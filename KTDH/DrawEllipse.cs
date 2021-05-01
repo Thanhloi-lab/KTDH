@@ -20,12 +20,13 @@ namespace KTDH
             dx = 2 * radiusY * radiusY * x;
             dy = 2 * radiusX * radiusX * y;
 
+            points.Add(new Point((int)(center.X / scale) * scale, (int)(center.Y / scale) * scale));
             while(dx<dy)
             {
-                int x1 = (int)((x + center.X) / scale) * scale -1;
-                int x2 = (int)((-x + center.X) / scale) * scale -1;
-                int y1 = (int)((y + center.Y) / scale) * scale -1;
-                int y2 = (int)((-y + center.Y) / scale) * scale -1;
+                int x1 = (int)((x + center.X) / scale) * scale;
+                int x2 = (int)((-x + center.X) / scale) * scale;
+                int y1 = (int)((y + center.Y) / scale) * scale;
+                int y2 = (int)((-y + center.Y) / scale) * scale;
 
                 points.Add(new Point(x1, y1));
                 points.Add(new Point(x2, y1));

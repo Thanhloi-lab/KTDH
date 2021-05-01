@@ -30,35 +30,75 @@ namespace KTDH
         private void InitializeComponent()
         {
             this.mainPanel = new System.Windows.Forms.Panel();
+            this.valueXLabel = new System.Windows.Forms.Label();
+            this.valueXTextBox = new System.Windows.Forms.TextBox();
+            this.transformationComboBox = new System.Windows.Forms.ComboBox();
             this.btnClear = new System.Windows.Forms.Button();
             this.hasArrowCheckBox = new System.Windows.Forms.CheckBox();
             this.drawPanel = new System.Windows.Forms.Panel();
             this.lineStyleComboBox = new System.Windows.Forms.ComboBox();
-            this.labelY = new System.Windows.Forms.Label();
-            this.labelX = new System.Windows.Forms.Label();
-            this.textBoxX = new System.Windows.Forms.TextBox();
-            this.textBoxY = new System.Windows.Forms.TextBox();
             this.btDrawLine = new System.Windows.Forms.Button();
+            this.valueYLabel = new System.Windows.Forms.Label();
+            this.valueYTextBox = new System.Windows.Forms.TextBox();
             this.mainPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainPanel
             // 
             this.mainPanel.BackColor = System.Drawing.Color.LemonChiffon;
+            this.mainPanel.Controls.Add(this.valueYLabel);
+            this.mainPanel.Controls.Add(this.valueYTextBox);
+            this.mainPanel.Controls.Add(this.valueXLabel);
+            this.mainPanel.Controls.Add(this.valueXTextBox);
+            this.mainPanel.Controls.Add(this.transformationComboBox);
             this.mainPanel.Controls.Add(this.btnClear);
             this.mainPanel.Controls.Add(this.hasArrowCheckBox);
             this.mainPanel.Controls.Add(this.drawPanel);
             this.mainPanel.Controls.Add(this.lineStyleComboBox);
-            this.mainPanel.Controls.Add(this.labelY);
-            this.mainPanel.Controls.Add(this.labelX);
-            this.mainPanel.Controls.Add(this.textBoxX);
-            this.mainPanel.Controls.Add(this.textBoxY);
             this.mainPanel.Controls.Add(this.btDrawLine);
             this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainPanel.Location = new System.Drawing.Point(0, 0);
             this.mainPanel.Name = "mainPanel";
             this.mainPanel.Size = new System.Drawing.Size(811, 480);
             this.mainPanel.TabIndex = 0;
+            // 
+            // valueXLabel
+            // 
+            this.valueXLabel.AutoSize = true;
+            this.valueXLabel.Location = new System.Drawing.Point(11, 218);
+            this.valueXLabel.Name = "valueXLabel";
+            this.valueXLabel.Size = new System.Drawing.Size(42, 15);
+            this.valueXLabel.TabIndex = 14;
+            this.valueXLabel.Text = "ValueX";
+            // 
+            // valueXTextBox
+            // 
+            this.valueXTextBox.Location = new System.Drawing.Point(59, 215);
+            this.valueXTextBox.MaxLength = 5;
+            this.valueXTextBox.Name = "valueXTextBox";
+            this.valueXTextBox.Size = new System.Drawing.Size(34, 23);
+            this.valueXTextBox.TabIndex = 13;
+            this.valueXTextBox.Text = "2";
+            this.valueXTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
+            // 
+            // transformationComboBox
+            // 
+            this.transformationComboBox.Enabled = false;
+            this.transformationComboBox.FormattingEnabled = true;
+            this.transformationComboBox.Items.AddRange(new object[] {
+            "Default",
+            "Move To",
+            "Scale To",
+            "Rotate To",
+            "Flip X",
+            "Flip Y",
+            "Flip O"});
+            this.transformationComboBox.Location = new System.Drawing.Point(12, 173);
+            this.transformationComboBox.Name = "transformationComboBox";
+            this.transformationComboBox.Size = new System.Drawing.Size(75, 23);
+            this.transformationComboBox.TabIndex = 12;
+            this.transformationComboBox.Text = "Default";
+            this.transformationComboBox.SelectedIndexChanged += new System.EventHandler(this.TransformationComboBox_SelectedIndexChanged);
             // 
             // btnClear
             // 
@@ -107,39 +147,6 @@ namespace KTDH
             this.lineStyleComboBox.TabIndex = 8;
             this.lineStyleComboBox.Text = "Basic Line";
             // 
-            // labelY
-            // 
-            this.labelY.AutoSize = true;
-            this.labelY.Location = new System.Drawing.Point(12, 416);
-            this.labelY.Name = "labelY";
-            this.labelY.Size = new System.Drawing.Size(14, 15);
-            this.labelY.TabIndex = 7;
-            this.labelY.Text = "Y";
-            // 
-            // labelX
-            // 
-            this.labelX.AutoSize = true;
-            this.labelX.BackColor = System.Drawing.Color.Transparent;
-            this.labelX.Location = new System.Drawing.Point(12, 384);
-            this.labelX.Name = "labelX";
-            this.labelX.Size = new System.Drawing.Size(14, 15);
-            this.labelX.TabIndex = 6;
-            this.labelX.Text = "X";
-            // 
-            // textBoxX
-            // 
-            this.textBoxX.Location = new System.Drawing.Point(32, 381);
-            this.textBoxX.Name = "textBoxX";
-            this.textBoxX.Size = new System.Drawing.Size(55, 23);
-            this.textBoxX.TabIndex = 5;
-            // 
-            // textBoxY
-            // 
-            this.textBoxY.Location = new System.Drawing.Point(32, 413);
-            this.textBoxY.Name = "textBoxY";
-            this.textBoxY.Size = new System.Drawing.Size(55, 23);
-            this.textBoxY.TabIndex = 4;
-            // 
             // btDrawLine
             // 
             this.btDrawLine.Location = new System.Drawing.Point(12, 12);
@@ -149,6 +156,25 @@ namespace KTDH
             this.btDrawLine.Text = "Draw";
             this.btDrawLine.UseVisualStyleBackColor = true;
             this.btDrawLine.Click += new System.EventHandler(this.btDrawLine_Click);
+            // 
+            // valueYLabel
+            // 
+            this.valueYLabel.AutoSize = true;
+            this.valueYLabel.Location = new System.Drawing.Point(11, 247);
+            this.valueYLabel.Name = "valueYLabel";
+            this.valueYLabel.Size = new System.Drawing.Size(42, 15);
+            this.valueYLabel.TabIndex = 16;
+            this.valueYLabel.Text = "ValueY";
+            // 
+            // valueYTextBox
+            // 
+            this.valueYTextBox.Location = new System.Drawing.Point(59, 244);
+            this.valueYTextBox.MaxLength = 5;
+            this.valueYTextBox.Name = "valueYTextBox";
+            this.valueYTextBox.Size = new System.Drawing.Size(34, 23);
+            this.valueYTextBox.TabIndex = 15;
+            this.valueYTextBox.Text = "2";
+            this.valueYTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.valueYTextBox_KeyPress);
             // 
             // Form1
             // 
@@ -168,14 +194,15 @@ namespace KTDH
 
         private System.Windows.Forms.Panel mainPanel;
         private System.Windows.Forms.Button btDrawLine;
-        private System.Windows.Forms.Label labelY;
-        private System.Windows.Forms.Label labelX;
-        private System.Windows.Forms.TextBox textBoxX;
-        private System.Windows.Forms.TextBox textBoxY;
         private System.Windows.Forms.ComboBox lineStyleComboBox;
         private System.Windows.Forms.Panel drawPanel;
         private System.Windows.Forms.CheckBox hasArrowCheckBox;
         private System.Windows.Forms.Button btnClear;
+        private System.Windows.Forms.ComboBox transformationComboBox;
+        private System.Windows.Forms.Label valueXLabel;
+        private System.Windows.Forms.TextBox valueXTextBox;
+        private System.Windows.Forms.Label valueYLabel;
+        private System.Windows.Forms.TextBox valueYTextBox;
     }
 }
 

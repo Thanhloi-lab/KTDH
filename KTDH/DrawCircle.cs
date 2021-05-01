@@ -43,10 +43,10 @@ namespace KTDH
         private static List<Point> get8Point(int x0, int y0, int x, int y)
         {
             int scale = MyCoordinate.scale;
-            x0 = (int)(x0 / scale) * scale + 1;
-            y0 = (int)(y0 / scale) * scale - 1;
-            x = (int)(x / scale) * scale +1;
-            y = (int)(y / scale) * scale -1;
+            x0 = (int)(x0 / scale) * scale;
+            y0 = (int)(y0 / scale) * scale;
+            x = (int)(x / scale) * scale;
+            y = (int)(y / scale) * scale;
 
             List<Point> points = new List<Point>();
             points.Add(new Point(x0 + x, y0 + y));
@@ -64,7 +64,7 @@ namespace KTDH
             int scale = MyCoordinate.scale;
 
             List<Point> points = new List<Point>();
-            Point centerPoint = new Point((int)(x0 / scale) * scale + 1, (int)(y0 / scale) * scale - 1);
+            Point centerPoint = new Point((int)(x0 / scale) * scale, (int)(y0 / scale) * scale);
             points.Add(centerPoint);
             int x = 0; int y = r;
             int p = 3 - 2 * r;

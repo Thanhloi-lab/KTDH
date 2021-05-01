@@ -13,6 +13,8 @@ namespace KTDH
     public partial class Form1 : Form
     {
         Graphics graphics;
+        private List<List<Point>> shapesPoints = new List<List<Point>>();
+        private List<Point> defaultPoints = new List<Point>();
         private Point point1 = new Point(-1, -1);
         private Point point2 = new Point(-1, -1);
         private Point centerPoint = new Point(-1, -1);
@@ -31,12 +33,11 @@ namespace KTDH
             pen = new Pen(Color.BlueViolet, 3);
             eraser = new Pen(drawPanel.BackColor, 5);
             eraser.StartCap = eraser.EndCap = pen.StartCap = pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-                    
+            
         }
         private void DrawCenterMyCoordinate()
         {
             EraseMyCoordinate();
-            List<Point> axis = MyCoordinate.DrawMyCoordinateAxis();
             List<Point> netPixel = MyCoordinate.DrawNetPixel();
             Pen redPen = new Pen(Color.Red, 5);
             Pen grayPen = new Pen(Color.LightGray, 1);
@@ -122,13 +123,11 @@ namespace KTDH
                 label.Show();
                 if (isPoint1 == false)
                 {
+                    this.transformationComboBox.Enabled = false;
                     point1.X = e.X;
                     point1.Y = e.Y;
                     isPoint1 = true;
-                    Point showPoint = MyCoordinate.ConvertToMyPoint(point1);
-                    textBoxX.Text = showPoint.X.ToString();
-                    textBoxY.Text = showPoint.Y.ToString();
-                    if(isEllipseCenter == false && lineStyleComboBox.SelectedIndex == 6)
+                    if (isEllipseCenter == false && lineStyleComboBox.SelectedIndex == 6)
                     {
                         centerPoint = point1;
                         isPoint1 = false;
@@ -137,12 +136,10 @@ namespace KTDH
                 }
                 else if (isPoint1 && !isPoint2)
                 {
+                    this.transformationComboBox.Enabled = true;
                     point2.X = e.X;
                     point2.Y = e.Y;
                     isPoint2 = true;
-                    Point showPoint = MyCoordinate.ConvertToMyPoint(point2);
-                    textBoxX.Text = showPoint.X.ToString();
-                    textBoxY.Text = showPoint.Y.ToString();
                     Point firstPoint = point1;
                     Point seccondPoint = point2;
                     List<Point> points = DrawLine.DDA(firstPoint, seccondPoint);
@@ -151,78 +148,56 @@ namespace KTDH
                     {
                         case 0:
                             {
-                                DrawMyShape(points,graphics,pen);
+                                DrawMyShape(points);
                                 if (hasArrowCheckBox.Checked)
-                                    DrawArrow(graphics, point1, point2, 3);
+                                    DrawArrow(point1, point2, 3);
                                 break;
                             }
                         case 1:
                             {
-                                DrawDashLine(points, graphics, pen);
+                                points = DrawLine.DashLine(points);
+                                DrawMyShape(points,1);
                                 if (hasArrowCheckBox.Checked)
-                                    DrawArrow(graphics, point1, point2, 3);
+                                    DrawArrow(point1, point2, 3);
 
                                 break;
                             }
                         case 2:
                             {
-                                DrawDashedLineWithOneDot(points, graphics, pen);
+                                points = DrawLine.DashedLineWithOneDot(points);
+                                DrawMyShape(points,1);
                                 if (hasArrowCheckBox.Checked)
-                                    DrawArrow(graphics, point1, point2, 3);
+                                    DrawArrow(point1, point2, 3);
 
                                 break;
                             }
                         case 3:
                             {
-                                DrawDashLineWithTwoDot(points, graphics, pen);
+                                points = DrawLine.DashLineWithTwoDot(points);
+                                DrawMyShape(points,1);
                                 if (hasArrowCheckBox.Checked)
-                                   DrawArrow(graphics, point1, point2, 3);
+                                   DrawArrow(point1, point2, 3);
                                 break;
                             }
                         case 4:
                             {
-                                List<Point> rectPoints = DrawRecangle.DDA(point1, point2);
-                                DrawMyShape(rectPoints, graphics, pen);
+                                points = DrawRecangle.DDA(point1, point2);
+                                DrawMyShape(points);
                                 break;
                             }
                         case 5:
                             {
                                 int radius = (int)Math.Sqrt(Math.Pow(point2.X - point1.X, 2) + Math.Pow(point2.Y - point1.Y, 2));
-                                List<Point> circlePoints = DrawCircle.circleBrese(point1.X, point1.Y, radius);
-                                DrawMyShape(circlePoints, graphics, pen);
-                                //graphics.DrawRectangle(pen, new Rectangle(point1.X, point1.Y, 1, 1));
-                                //double arrowLength = Math.Sqrt(Math.Pow(Math.Abs(point1.X - point2.X), 2) +
-                                //           Math.Pow(Math.Abs(point1.Y - point2.Y), 2));
-                                //int arrowLengthFixed = 0;
-                                //if (arrowLength % MyCoordinate.scale < 3)
-                                //    arrowLengthFixed = (int)Math.Round(arrowLength) - (int)Math.Round(arrowLength) % MyCoordinate.scale;
-                                //else
-                                //    arrowLengthFixed = (int)Math.Round(arrowLength) - (int)Math.Round(arrowLength) % MyCoordinate.scale + MyCoordinate.scale;
-
-                                //List<Point> circlePoints = DrawCircle.DDA(point1.X, point1.Y, arrowLengthFixed);
-                                //List<Point> circlePointsFixed = new List<Point>();
-
-                                //for (int i = 0; i < circlePoints.Count - 1; i++)
-                                //{
-                                //    Point pointI = circlePoints.ElementAt(i);
-                                //    Point pointI1 = circlePoints.ElementAt(i +1);
-                                //    if ((FixedY(pointI.Y) == FixedY(pointI1.Y)
-                                //        && (pointI.Y <= point.Y  + (int)(arrowLengthFixed/Math.Sqrt(2))
-                                //        || pointI.Y >= point.Y - (int)(arrowLengthFixed/Math.Sqrt(2)))
-                                //        || (FixedY(pointI.Y) != FixedY(pointI1.Y))))
-                                //    {
-                                //        circlePointsFixed.Add(new Point(FixedX(circlePoints.ElementAt(i).X), FixedY(circlePoints.ElementAt(i).Y)));
-                                //    }
-                                //}
-                                //DrawBasicLine(circlePointsFixed, graphics, pen);
+                                points = DrawCircle.circleBrese(point1.X, point1.Y, radius);
+                                DrawMyShape(points);
                                 break;
                             }
                         case 6:
                             {
                                 int radiusX = (int)Math.Sqrt(Math.Pow(point1.X - centerPoint.X, 2) + Math.Pow(point1.Y - centerPoint.Y, 2));
                                 int radiusY = (int)Math.Sqrt(Math.Pow(point2.X - centerPoint.X, 2) + Math.Pow(point2.Y - centerPoint.Y, 2)); ;
-                                List<Point> ellipsePoint = DrawEllipse.MidPoint(centerPoint, radiusX, radiusY);
-                                DrawMyShape(ellipsePoint, graphics, pen);
+                                points = DrawEllipse.MidPoint(centerPoint, radiusX, radiusY);
+                                DrawMyShape(points);
                                 isEllipseCenter = false;
                                 break;
                             }
@@ -230,131 +205,52 @@ namespace KTDH
                         default:
                             break;
                     }
-                    
+
+                    shapesPoints.Add(points);
+                    defaultPoints = shapesPoints.ElementAt(shapesPoints.Count - 1);
                     isPoint1 = isPoint2 = false;
                 }
             }
         }
-        private int FixedX(int x)
+        
+        private void DrawMyShape(List<Point> points)
         {
-
-                if (x % MyCoordinate.scale < 3)
-                    x = x - x % MyCoordinate.scale;
-                else
-                    x = x - x % MyCoordinate.scale + MyCoordinate.scale;
-
-            return x;
-        }
-        private int FixedY(int y)
-        {
-
-                if (y % MyCoordinate.scale < 3)
-                    y = y - y % MyCoordinate.scale;
-                else
-                    y = y - y % MyCoordinate.scale + MyCoordinate.scale;
-
-            return y;
+            DrawMyShape(points, MyCoordinate.scale);
         }
 
-        public void DrawDashedLineWithOneDot(List<Point> points, Graphics graphics, Pen pen)
+        private void DrawMyShape(List<Point> points, int step)
         {
-            int count = 0;
-            int line = 0;
-            int countSpace = 0;
-            for (int i = 0; i < points.Count - 1; i += MyCoordinate.scale)
-            {
-                if (line != DrawLine.Line)
-                {
-                    Point point = points.ElementAt(i);
-                    graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
-                    line++;
-                }
-                else
-                {
-                    count++;
-                    if (count == DrawLine.Space && countSpace == 0)
-                    {
-                        Point point = points.ElementAt(i);
-                        graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
-                        countSpace++;
-                        count = 0;
-                    }
-                    else if (count == DrawLine.Space && countSpace == 1)
-                    {
-                        count = line = countSpace = 0;
-                    }
-                }
-            }
-        }
-        public void DrawDashLineWithTwoDot(List<Point> points, Graphics graphics, Pen pen)
-        {
-            int count = 0;
-            int countDot = 0;
-            int inLine = 0;
-            int countSpace = 0;
-            for (int i = 0; i < points.Count - 1; i += MyCoordinate.scale)
-            {
-                if (inLine != DrawLine.Line)
-                {
-                    Point point = points.ElementAt(i);
-                    graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
-                    inLine++;
-                }
-                else
-                {
-                    count++;
-                    if (count == DrawLine.Space && countSpace == 0)
-                    {
-                        Point point = points.ElementAt(i);
-                        graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
-                        countSpace++;
-                        count = 0;
-                    }
-                    else if (count == DrawLine.Space && countSpace == 1 && countDot == 0)
-                    {
-                        count = countSpace = 0;
-                        countDot++;
-                    }
-                    else if (count == DrawLine.Space && countSpace == 1 && countDot == 1)
-                    {
-                        count = countSpace = countDot = inLine = 0;
-                    }
-                }
-            }
-        }
-        public void DrawDashLine(List<Point> points, Graphics graphics, Pen pen)
-        {
-            int count = 0;
-            int inLine = 0;
-
-            for (int i = 0; i < points.Count - 1; i += MyCoordinate.scale)
-            {
-                if (inLine != DrawLine.Line)
-                {
-                    Point point = points.ElementAt(i);
-                    graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
-                    inLine++;
-                }
-                else
-                {
-                    count++;
-                    if (count == DrawLine.Space)
-                    {
-                        count = inLine = 0;
-                    }
-                }
-            }
-        }
-        private void DrawMyShape(List<Point> points, Graphics graphics, Pen pen)
-        {
-            for (int i = 0; i < points.Count; i += MyCoordinate.scale)
+            for (int i = 0; i < points.Count; i += step)
             {
                 Point point = points.ElementAt(i);
-                graphics.DrawRectangle(pen, new Rectangle(point.X, point.Y, 1, 1));
+                graphics.DrawRectangle(pen, new Rectangle(point.X - 1, point.Y - 1, 2, 2));
             }
         }
 
-        private void DrawArrow(Graphics g, PointF ArrowStart, PointF ArrowEnd, int ArrowMultiplier)
+        private void DrawMyShapeWithLabel(List<Point> points)
+        {
+            DrawMyShape(points, MyCoordinate.scale);
+
+            Label labelStart = new Label();
+            labelStart.Location = new Point(points[0].X + 10, points[0].Y);
+            labelStart.Text = "(" + MyCoordinate.ConvertToMyPoint(points[0]).X + ", " + MyCoordinate.ConvertToMyPoint(points[0]).Y + ")";
+            labelStart.SendToBack();
+            labelStart.ForeColor = Color.Red;
+            labelStart.AutoSize = true;
+            drawPanel.Controls.Add(labelStart);
+            labelStart.Show();
+
+            Label labelEnd = new Label();
+            labelEnd.Location = new Point(points[points.Count-1].X + 10, points[points.Count - 1].Y);
+            labelEnd.Text = "(" + MyCoordinate.ConvertToMyPoint(points[points.Count - 1]).X + ", " + MyCoordinate.ConvertToMyPoint(points[points.Count - 1]).Y + ")";
+            labelEnd.SendToBack();
+            labelEnd.ForeColor = Color.Red;
+            labelEnd.AutoSize = true;
+            drawPanel.Controls.Add(labelEnd);
+            labelEnd.Show();
+        }
+
+        private void DrawArrow(PointF ArrowStart, PointF ArrowEnd, int ArrowMultiplier)
         {
 
             //tip of the arrow
@@ -457,16 +353,16 @@ namespace KTDH
             Point arrowPointRightInt = new Point((int)Math.Round(arrowPointRight.X), (int)Math.Round(arrowPointRight.Y));
 
             List<Point> points = DrawLine.DDA(arrowPointInt, arrowPointLeftInt);
-            DrawMyShape(points, g, pen);
+            DrawMyShape(points, 1);
 
             points = DrawLine.DDA(arrowPointInt, arrowPointRightInt);
-            DrawMyShape(points, g, pen);
+            DrawMyShape(points,1);
 
             points = DrawLine.DDA(arrowPointLeftInt, arrowPointBackInt);
-            DrawMyShape(points, g, pen);
-            
+            DrawMyShape(points,1);
+
             points = DrawLine.DDA(arrowPointRightInt, arrowPointBackInt);
-            DrawMyShape(points, g, pen);
+            DrawMyShape(points,1);
 
             //draw the outline
             //g.DrawPolygon(pen, arrowPoints);
@@ -475,9 +371,114 @@ namespace KTDH
             //g.FillPolygon(new SolidBrush(pen.Color), arrowPoints);
         }
 
+        private void PerformTransform(List<Point> points, int mode, Point value)
+        {
+            switch(mode)
+            {
+                case 0:
+                    {
+                        RedrawShapes();
+                        DrawMyShapeWithLabel(defaultPoints);
+                        shapesPoints[shapesPoints.Count - 1] = defaultPoints;
+                        break;
+                    }
+                case 1:
+                    {
+                        RedrawShapes();
+                        List<List<int>> transform = Transformation.MoveTo(value.X, value.Y);
+                        points = Transformation.getTransformedPoint(points, transform);
+                        DrawMyShapeWithLabel(points);
+                        shapesPoints[shapesPoints.Count - 1] = points;
+                        break;
+                    }
+                case 2:
+                    {
+                        
+                        break;
+                    }
+                case 3:
+                    {
+
+                        break;
+                    }
+                case 4:
+                    {
+                        RedrawShapes();
+                        List<List<int>> transform = Transformation.Flip(true, false);
+                        points = Transformation.getTransformedPoint(points, transform);
+                        DrawMyShapeWithLabel(points);
+                        shapesPoints[shapesPoints.Count - 1] = points;
+                        break;
+                    }
+                case 5:
+                    {
+                        RedrawShapes();
+                        List<List<int>> transform = Transformation.Flip(false, true);
+                        points = Transformation.getTransformedPoint(points, transform);
+                        DrawMyShapeWithLabel(points);
+                        shapesPoints[shapesPoints.Count - 1] = points;
+                        break;
+                    }
+                case 6:
+                    {
+                        RedrawShapes();
+                        List<List<int>> transform = Transformation.Flip(true, true);
+                        points = Transformation.getTransformedPoint(points, transform);
+                        DrawMyShapeWithLabel(points);
+                        shapesPoints[shapesPoints.Count - 1] = points;
+                        break;
+                    }
+            }
+        }
+
+        private void RedrawShapes()
+        {
+            DrawCenterMyCoordinate();
+            for(int i=0; i<shapesPoints.Count-1; i++)
+            {
+                List<Point> points = shapesPoints.ElementAt(i);
+                DrawMyShapeWithLabel(points);
+            }
+        }
+
         private void btnClear_Click(object sender, EventArgs e)
         {
             DrawCenterMyCoordinate();
+        }
+
+        private void TransformationComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int x= int.Parse(valueXTextBox.Text);
+            int y = int.Parse(valueYTextBox.Text);
+            Point value = new Point(x, -y);
+            int index = transformationComboBox.SelectedIndex;
+            PerformTransform(shapesPoints.ElementAt(shapesPoints.Count - 1), index, value);
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '-'))
+            {
+                e.Handled = true;
+            }
+
+            if ((e.KeyChar == '-') && ((sender as TextBox).Text.IndexOf('-') > -1))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void valueYTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '-'))
+            {
+                e.Handled = true;
+            }
+
+            if ((e.KeyChar == '-') && ((sender as TextBox).Text.IndexOf('-') > -1))
+            {
+                e.Handled = true;
+            }
         }
     }
 }
