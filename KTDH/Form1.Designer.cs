@@ -30,6 +30,11 @@ namespace KTDH
         private void InitializeComponent()
         {
             this.mainPanel = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tbDegree = new System.Windows.Forms.TextBox();
+            this.btTransform = new System.Windows.Forms.Button();
+            this.valueYLabel = new System.Windows.Forms.Label();
+            this.valueYTextBox = new System.Windows.Forms.TextBox();
             this.valueXLabel = new System.Windows.Forms.Label();
             this.valueXTextBox = new System.Windows.Forms.TextBox();
             this.transformationComboBox = new System.Windows.Forms.ComboBox();
@@ -38,14 +43,15 @@ namespace KTDH
             this.drawPanel = new System.Windows.Forms.Panel();
             this.lineStyleComboBox = new System.Windows.Forms.ComboBox();
             this.btDrawLine = new System.Windows.Forms.Button();
-            this.valueYLabel = new System.Windows.Forms.Label();
-            this.valueYTextBox = new System.Windows.Forms.TextBox();
             this.mainPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainPanel
             // 
             this.mainPanel.BackColor = System.Drawing.Color.LemonChiffon;
+            this.mainPanel.Controls.Add(this.label1);
+            this.mainPanel.Controls.Add(this.tbDegree);
+            this.mainPanel.Controls.Add(this.btTransform);
             this.mainPanel.Controls.Add(this.valueYLabel);
             this.mainPanel.Controls.Add(this.valueYTextBox);
             this.mainPanel.Controls.Add(this.valueXLabel);
@@ -61,6 +67,53 @@ namespace KTDH
             this.mainPanel.Name = "mainPanel";
             this.mainPanel.Size = new System.Drawing.Size(811, 480);
             this.mainPanel.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(11, 310);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(44, 15);
+            this.label1.TabIndex = 19;
+            this.label1.Text = "Degree";
+            // 
+            // tbDegree
+            // 
+            this.tbDegree.Location = new System.Drawing.Point(59, 307);
+            this.tbDegree.MaxLength = 5;
+            this.tbDegree.Name = "tbDegree";
+            this.tbDegree.Size = new System.Drawing.Size(34, 23);
+            this.tbDegree.TabIndex = 18;
+            this.tbDegree.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbDegree_KeyPress);
+            // 
+            // btTransform
+            // 
+            this.btTransform.Location = new System.Drawing.Point(11, 278);
+            this.btTransform.Name = "btTransform";
+            this.btTransform.Size = new System.Drawing.Size(75, 23);
+            this.btTransform.TabIndex = 17;
+            this.btTransform.Text = "Transform";
+            this.btTransform.UseVisualStyleBackColor = true;
+            this.btTransform.Click += new System.EventHandler(this.btTransform_Click);
+            // 
+            // valueYLabel
+            // 
+            this.valueYLabel.AutoSize = true;
+            this.valueYLabel.Location = new System.Drawing.Point(11, 247);
+            this.valueYLabel.Name = "valueYLabel";
+            this.valueYLabel.Size = new System.Drawing.Size(42, 15);
+            this.valueYLabel.TabIndex = 16;
+            this.valueYLabel.Text = "ValueY";
+            // 
+            // valueYTextBox
+            // 
+            this.valueYTextBox.Location = new System.Drawing.Point(59, 244);
+            this.valueYTextBox.MaxLength = 5;
+            this.valueYTextBox.Name = "valueYTextBox";
+            this.valueYTextBox.Size = new System.Drawing.Size(34, 23);
+            this.valueYTextBox.TabIndex = 15;
+            this.valueYTextBox.Text = "2";
+            this.valueYTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.valueYTextBox_KeyPress);
             // 
             // valueXLabel
             // 
@@ -88,7 +141,6 @@ namespace KTDH
             this.transformationComboBox.Items.AddRange(new object[] {
             "Default",
             "Move To",
-            "Scale To",
             "Rotate To",
             "Flip X",
             "Flip Y",
@@ -157,25 +209,6 @@ namespace KTDH
             this.btDrawLine.UseVisualStyleBackColor = true;
             this.btDrawLine.Click += new System.EventHandler(this.btDrawLine_Click);
             // 
-            // valueYLabel
-            // 
-            this.valueYLabel.AutoSize = true;
-            this.valueYLabel.Location = new System.Drawing.Point(11, 247);
-            this.valueYLabel.Name = "valueYLabel";
-            this.valueYLabel.Size = new System.Drawing.Size(42, 15);
-            this.valueYLabel.TabIndex = 16;
-            this.valueYLabel.Text = "ValueY";
-            // 
-            // valueYTextBox
-            // 
-            this.valueYTextBox.Location = new System.Drawing.Point(59, 244);
-            this.valueYTextBox.MaxLength = 5;
-            this.valueYTextBox.Name = "valueYTextBox";
-            this.valueYTextBox.Size = new System.Drawing.Size(34, 23);
-            this.valueYTextBox.TabIndex = 15;
-            this.valueYTextBox.Text = "2";
-            this.valueYTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.valueYTextBox_KeyPress);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -203,6 +236,9 @@ namespace KTDH
         private System.Windows.Forms.TextBox valueXTextBox;
         private System.Windows.Forms.Label valueYLabel;
         private System.Windows.Forms.TextBox valueYTextBox;
+        private System.Windows.Forms.Button btTransform;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox tbDegree;
     }
 }
 

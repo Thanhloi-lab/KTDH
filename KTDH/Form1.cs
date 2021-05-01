@@ -159,7 +159,6 @@ namespace KTDH
                                 DrawMyShape(points,1);
                                 if (hasArrowCheckBox.Checked)
                                     DrawArrow(point1, point2, 3);
-
                                 break;
                             }
                         case 2:
@@ -227,10 +226,12 @@ namespace KTDH
             }
         }
 
-        private void DrawMyShapeWithLabel(List<Point> points)
+        private void DrawMyShapeWithLabel(List<Point> points, bool isDefaultStyle)
         {
-            DrawMyShape(points, MyCoordinate.scale);
-
+            if (isDefaultStyle)
+                DrawMyShape(points, MyCoordinate.scale);
+            else
+                DrawMyShape(points, 1);
             Label labelStart = new Label();
             labelStart.Location = new Point(points[0].X + 10, points[0].Y);
             labelStart.Text = "(" + MyCoordinate.ConvertToMyPoint(points[0]).X + ", " + MyCoordinate.ConvertToMyPoint(points[0]).Y + ")";
@@ -371,60 +372,94 @@ namespace KTDH
             //g.FillPolygon(new SolidBrush(pen.Color), arrowPoints);
         }
 
-        private void PerformTransform(List<Point> points, int mode, Point value)
+        private void PerformTransform(List<Point> points, int mode, Point value, bool isDefaultStyle)
         {
             switch(mode)
             {
                 case 0:
                     {
                         RedrawShapes();
-                        DrawMyShapeWithLabel(defaultPoints);
+                        DrawMyShapeWithLabel(defaultPoints, isDefaultStyle);
                         shapesPoints[shapesPoints.Count - 1] = defaultPoints;
                         break;
                     }
                 case 1:
-                    {
+                    { 
                         RedrawShapes();
                         List<List<int>> transform = Transformation.MoveTo(value.X, value.Y);
                         points = Transformation.getTransformedPoint(points, transform);
-                        DrawMyShapeWithLabel(points);
+                        DrawMyShapeWithLabel(points, isDefaultStyle);
                         shapesPoints[shapesPoints.Count - 1] = points;
                         break;
                     }
                 case 2:
                     {
-                        
+                        if(string.IsNullOrEmpty(tbDegree.Text))
+                        {
+                            MessageBox.Show("Input Degree before do this action");
+                            return;
+                        }
+                        RedrawShapes();
+                        List<List<double>> transform = Transformation.RotateTo(int.Parse(tbDegree.Text));
+                        Point firstPoint = new Point(points.ElementAt(0).X, points.ElementAt(0).Y);
+                        points = Transformation.MoveToO(points, firstPoint);
+                        points = Transformation.getTransformedPointDouble(points, transform);
+                        var pointsAfter = new List<Point>();
+                        foreach (var item in points)
+                        {
+                            Point point = new Point(item.X + firstPoint.X, item.Y + firstPoint.Y);
+                            pointsAfter.Add(point);
+                        }
+                        points = pointsAfter;
+                        DrawMyShapeWithLabel(points, isDefaultStyle);
+                        shapesPoints[shapesPoints.Count - 1] = points;
                         break;
                     }
                 case 3:
                     {
-
+                        RedrawShapes();
+                        List<List<int>> transform = Transformation.Flip(true, false);
+                        points = Transformation.getTransformedPoint(points, transform);
+                        var pointsAfterFlipX = new List<Point>();
+                        foreach (var item in points)
+                        {
+                            Point point = new Point(item.X, item.Y+MyCoordinate.centerPoint.Y*2);
+                            pointsAfterFlipX.Add(point);
+                        }
+                        points = pointsAfterFlipX;
+                        DrawMyShapeWithLabel(points, isDefaultStyle);
+                        shapesPoints[shapesPoints.Count - 1] = points;
                         break;
                     }
                 case 4:
                     {
                         RedrawShapes();
-                        List<List<int>> transform = Transformation.Flip(true, false);
+                        List<List<int>> transform = Transformation.Flip(false, true);
                         points = Transformation.getTransformedPoint(points, transform);
-                        DrawMyShapeWithLabel(points);
+                        var pointsAfterFlipX = new List<Point>();
+                        foreach (var item in points)
+                        {
+                            Point point = new Point(item.X+MyCoordinate.centerPoint.X*2, item.Y);
+                            pointsAfterFlipX.Add(point);
+                        }
+                        points = pointsAfterFlipX;
+                        DrawMyShapeWithLabel(points, isDefaultStyle);
                         shapesPoints[shapesPoints.Count - 1] = points;
                         break;
                     }
                 case 5:
                     {
                         RedrawShapes();
-                        List<List<int>> transform = Transformation.Flip(false, true);
-                        points = Transformation.getTransformedPoint(points, transform);
-                        DrawMyShapeWithLabel(points);
-                        shapesPoints[shapesPoints.Count - 1] = points;
-                        break;
-                    }
-                case 6:
-                    {
-                        RedrawShapes();
                         List<List<int>> transform = Transformation.Flip(true, true);
                         points = Transformation.getTransformedPoint(points, transform);
-                        DrawMyShapeWithLabel(points);
+                        var pointsAfterFlipX = new List<Point>();
+                        foreach (var item in points)
+                        {
+                            Point point = new Point(item.X + MyCoordinate.centerPoint.X *2, item.Y + MyCoordinate.centerPoint.Y *2);
+                            pointsAfterFlipX.Add(point);
+                        }
+                        points = pointsAfterFlipX;
+                        DrawMyShapeWithLabel(points, isDefaultStyle);
                         shapesPoints[shapesPoints.Count - 1] = points;
                         break;
                     }
@@ -437,22 +472,19 @@ namespace KTDH
             for(int i=0; i<shapesPoints.Count-1; i++)
             {
                 List<Point> points = shapesPoints.ElementAt(i);
-                DrawMyShapeWithLabel(points);
+                DrawMyShapeWithLabel(points, true);
             }
         }
 
         private void btnClear_Click(object sender, EventArgs e)
         {
+            shapesPoints.Clear();
             DrawCenterMyCoordinate();
         }
 
         private void TransformationComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int x= int.Parse(valueXTextBox.Text);
-            int y = int.Parse(valueYTextBox.Text);
-            Point value = new Point(x, -y);
-            int index = transformationComboBox.SelectedIndex;
-            PerformTransform(shapesPoints.ElementAt(shapesPoints.Count - 1), index, value);
+            
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -469,6 +501,35 @@ namespace KTDH
         }
 
         private void valueYTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '-'))
+            {
+                e.Handled = true;
+            }
+
+            if ((e.KeyChar == '-') && ((sender as TextBox).Text.IndexOf('-') > -1))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void btTransform_Click(object sender, EventArgs e)
+        {
+            int x = 0;
+            int y = 0;
+            int.TryParse(valueXTextBox.Text, out x);
+            int.TryParse(valueYTextBox.Text, out y);
+            Point value = new Point(x, -y);
+            int index = transformationComboBox.SelectedIndex;
+            bool isDefaultStyle;
+            if (lineStyleComboBox.SelectedIndex == 0)
+                isDefaultStyle = true;
+            else
+                isDefaultStyle = false;
+            PerformTransform(shapesPoints.ElementAt(shapesPoints.Count - 1), index, value, isDefaultStyle);
+        }
+
+        private void tbDegree_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '-'))
             {

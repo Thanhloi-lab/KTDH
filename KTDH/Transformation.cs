@@ -32,17 +32,17 @@ namespace KTDH
             return matrix;
         }
 
-        public static List<List<int>> RotateTo(int degree)//Xoay
+        public static List<List<double>> RotateTo(int degree)//Xoay
         {
-            List<List<int>> matrix = new List<List<int>>();
+            List<List<double>> matrix = new List<List<double>>();
             int scale = MyCoordinate.scale;
 
-            int cos = (int)(Math.Cos(degree));
-            int sin = (int)(Math.Sin(degree));
+            double cos = Math.Cos(ConvertDegreesToRadiants(degree));
+            double sin = Math.Sin(ConvertDegreesToRadiants(degree));
 
-            matrix.Add(new List<int> { cos, sin, 0 });
-            matrix.Add(new List<int> { -sin, cos, 0 });
-            matrix.Add(new List<int> { 0, 0, scale });
+            matrix.Add(new List<double> { cos, -sin, 0 });
+            matrix.Add(new List<double> { sin, cos, 0 });
+            matrix.Add(new List<double> { 0, 0, scale });
 
             return matrix;
         }
@@ -88,6 +88,34 @@ namespace KTDH
 
             return result;
         }
+        public static List<Point> getTransformedPointDouble(List<Point> points, List<List<double>> transform)
+        {
+            List<Point> result = new List<Point>();
+            foreach (Point point in points)
+            {
+                double x = (point.X * transform[0][0]) + (point.Y * transform[0][1]);
+                double y = (point.X * transform[1][0]) + (point.Y * transform[1][1]);
+                double h = (point.X * transform[0][2]) + (point.Y * transform[1][2]) + transform[2][2];
+                result.Add(new Point((int)Math.Round(x), (int)Math.Round(y)));
+            }
 
+            return result;
+        }
+        public static List<Point> MoveToO(List<Point> points, Point firstPoint)
+        {
+            List<Point> pointsAfter = new List<Point>();
+            foreach (var item in points)
+            {
+                Point point = new Point(item.X-firstPoint.X, item.Y-firstPoint.Y);
+                pointsAfter.Add(point);
+            }
+
+            return pointsAfter;
+        }
+        public static double ConvertDegreesToRadiants(double degree)
+        {
+            double radiant = (degree * Math.PI) /180;
+            return (radiant);
+        }
     }
 }
