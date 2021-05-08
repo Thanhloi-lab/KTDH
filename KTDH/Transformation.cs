@@ -41,8 +41,8 @@ namespace KTDH
             double sin = Math.Sin(ConvertDegreesToRadiants(degree));
 
             matrix.Add(new List<double> { cos, -sin, 0 });
-            matrix.Add(new List<double> { sin, cos, 0 });
-            matrix.Add(new List<double> { 0, 0, scale });
+            matrix.Add(new List<double> { sin,  cos, 0 });
+            matrix.Add(new List<double> { 0, 0,  scale });
 
             return matrix;
         }
@@ -62,6 +62,21 @@ namespace KTDH
             return matrix;
         }
 
+        public static List<List<int>> Flip3D(bool oX, bool oY, bool oZ)//Đối xứng
+        {
+            List<List<int>> matrix = new List<List<int>>();
+            int scale = MyCoordinate.scale;
+
+            int newX = oY ? -1 : 1;
+            int newY = oX ? -1 : 1;
+            int newZ = oX ? -1 : 1;
+
+            matrix.Add(new List<int> { newX, 0, 0 });
+            matrix.Add(new List<int> { 0, newY, 0 });
+            matrix.Add(new List<int> { 0, 0, scale });
+
+            return matrix;
+        }
         public static List<List<int>> CombineTransform(List<List<int>> transform1, List<List<int>> transform2)
         {
             for(int i=0; i<transform1.Count; i++)

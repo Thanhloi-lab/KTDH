@@ -55,6 +55,24 @@ namespace KTDH
             graphics.DrawLine(redPen, new Point(0, MyCoordinate.centerPoint.Y), new Point(MyCoordinate.centerPoint.X * 2, MyCoordinate.centerPoint.Y));
         }
 
+        private void DrawCenterMyCoordinate3D()
+        {
+            EraseMyCoordinate();
+            List<Point> netPixel = MyCoordinate.Draw3DNetPixel();
+            Pen redPen = new Pen(Color.Red, 5);
+            Pen grayPen = new Pen(Color.LightGray, 1);
+
+            for (int i = 0; i < netPixel.Count - 1; i++)
+            {
+                if (netPixel.ElementAt(i).X == netPixel.ElementAt(i + 1).X
+                    || netPixel.ElementAt(i).Y == netPixel.ElementAt(i + 1).Y)
+                {
+                    graphics.DrawLine(grayPen, netPixel.ElementAt(i), netPixel.ElementAt(i + 1));
+                }
+            }
+            DrawMyShape(MyCoordinate.DrawMyCoordinateAxis3D(),1);
+        }
+
         private void EraseCenterMyCoordinate()
         {
             List<Point> points = MyCoordinate.DrawMyCoordinateAxis();
@@ -539,6 +557,20 @@ namespace KTDH
             if ((e.KeyChar == '-') && ((sender as TextBox).Text.IndexOf('-') > -1))
             {
                 e.Handled = true;
+            }
+        }
+
+        private void btnDraw3D_Click(object sender, EventArgs e)
+        {
+            if (drawLine)
+            {
+                drawLine = false;
+                EraseMyCoordinate();
+            }
+            else
+            {
+                drawLine = true;
+                DrawCenterMyCoordinate3D();
             }
         }
     }

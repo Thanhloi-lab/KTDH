@@ -43,12 +43,14 @@ namespace KTDH
             this.drawPanel = new System.Windows.Forms.Panel();
             this.lineStyleComboBox = new System.Windows.Forms.ComboBox();
             this.btDrawLine = new System.Windows.Forms.Button();
+            this.btnDraw3D = new System.Windows.Forms.Button();
             this.mainPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainPanel
             // 
             this.mainPanel.BackColor = System.Drawing.Color.LemonChiffon;
+            this.mainPanel.Controls.Add(this.btnDraw3D);
             this.mainPanel.Controls.Add(this.label1);
             this.mainPanel.Controls.Add(this.tbDegree);
             this.mainPanel.Controls.Add(this.btTransform);
@@ -71,7 +73,7 @@ namespace KTDH
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 310);
+            this.label1.Location = new System.Drawing.Point(11, 366);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(44, 15);
             this.label1.TabIndex = 19;
@@ -79,7 +81,7 @@ namespace KTDH
             // 
             // tbDegree
             // 
-            this.tbDegree.Location = new System.Drawing.Point(59, 307);
+            this.tbDegree.Location = new System.Drawing.Point(59, 363);
             this.tbDegree.MaxLength = 5;
             this.tbDegree.Name = "tbDegree";
             this.tbDegree.Size = new System.Drawing.Size(34, 23);
@@ -88,7 +90,7 @@ namespace KTDH
             // 
             // btTransform
             // 
-            this.btTransform.Location = new System.Drawing.Point(11, 278);
+            this.btTransform.Location = new System.Drawing.Point(11, 334);
             this.btTransform.Name = "btTransform";
             this.btTransform.Size = new System.Drawing.Size(75, 23);
             this.btTransform.TabIndex = 17;
@@ -99,7 +101,7 @@ namespace KTDH
             // valueYLabel
             // 
             this.valueYLabel.AutoSize = true;
-            this.valueYLabel.Location = new System.Drawing.Point(11, 247);
+            this.valueYLabel.Location = new System.Drawing.Point(11, 303);
             this.valueYLabel.Name = "valueYLabel";
             this.valueYLabel.Size = new System.Drawing.Size(42, 15);
             this.valueYLabel.TabIndex = 16;
@@ -107,7 +109,7 @@ namespace KTDH
             // 
             // valueYTextBox
             // 
-            this.valueYTextBox.Location = new System.Drawing.Point(59, 244);
+            this.valueYTextBox.Location = new System.Drawing.Point(59, 300);
             this.valueYTextBox.MaxLength = 5;
             this.valueYTextBox.Name = "valueYTextBox";
             this.valueYTextBox.Size = new System.Drawing.Size(34, 23);
@@ -118,7 +120,7 @@ namespace KTDH
             // valueXLabel
             // 
             this.valueXLabel.AutoSize = true;
-            this.valueXLabel.Location = new System.Drawing.Point(11, 218);
+            this.valueXLabel.Location = new System.Drawing.Point(11, 274);
             this.valueXLabel.Name = "valueXLabel";
             this.valueXLabel.Size = new System.Drawing.Size(42, 15);
             this.valueXLabel.TabIndex = 14;
@@ -126,7 +128,7 @@ namespace KTDH
             // 
             // valueXTextBox
             // 
-            this.valueXTextBox.Location = new System.Drawing.Point(59, 215);
+            this.valueXTextBox.Location = new System.Drawing.Point(59, 271);
             this.valueXTextBox.MaxLength = 5;
             this.valueXTextBox.Name = "valueXTextBox";
             this.valueXTextBox.Size = new System.Drawing.Size(34, 23);
@@ -145,7 +147,7 @@ namespace KTDH
             "Flip X",
             "Flip Y",
             "Flip O"});
-            this.transformationComboBox.Location = new System.Drawing.Point(12, 173);
+            this.transformationComboBox.Location = new System.Drawing.Point(12, 229);
             this.transformationComboBox.Name = "transformationComboBox";
             this.transformationComboBox.Size = new System.Drawing.Size(75, 23);
             this.transformationComboBox.TabIndex = 12;
@@ -154,7 +156,7 @@ namespace KTDH
             // 
             // btnClear
             // 
-            this.btnClear.Location = new System.Drawing.Point(13, 42);
+            this.btnClear.Location = new System.Drawing.Point(13, 98);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(75, 23);
             this.btnClear.TabIndex = 11;
@@ -165,7 +167,7 @@ namespace KTDH
             // hasArrowCheckBox
             // 
             this.hasArrowCheckBox.AutoSize = true;
-            this.hasArrowCheckBox.Location = new System.Drawing.Point(12, 116);
+            this.hasArrowCheckBox.Location = new System.Drawing.Point(12, 172);
             this.hasArrowCheckBox.Name = "hasArrowCheckBox";
             this.hasArrowCheckBox.Size = new System.Drawing.Size(81, 19);
             this.hasArrowCheckBox.TabIndex = 10;
@@ -193,7 +195,7 @@ namespace KTDH
             "Rectangle",
             "Circle",
             "Ellipse"});
-            this.lineStyleComboBox.Location = new System.Drawing.Point(12, 87);
+            this.lineStyleComboBox.Location = new System.Drawing.Point(12, 143);
             this.lineStyleComboBox.Name = "lineStyleComboBox";
             this.lineStyleComboBox.Size = new System.Drawing.Size(75, 23);
             this.lineStyleComboBox.TabIndex = 8;
@@ -208,6 +210,16 @@ namespace KTDH
             this.btDrawLine.Text = "Draw";
             this.btDrawLine.UseVisualStyleBackColor = true;
             this.btDrawLine.Click += new System.EventHandler(this.btDrawLine_Click);
+            // 
+            // btnDraw3D
+            // 
+            this.btnDraw3D.Location = new System.Drawing.Point(13, 42);
+            this.btnDraw3D.Name = "btnDraw3D";
+            this.btnDraw3D.Size = new System.Drawing.Size(75, 23);
+            this.btnDraw3D.TabIndex = 20;
+            this.btnDraw3D.Text = "Draw3D";
+            this.btnDraw3D.UseVisualStyleBackColor = true;
+            this.btnDraw3D.Click += new System.EventHandler(this.btnDraw3D_Click);
             // 
             // Form1
             // 
@@ -239,6 +251,7 @@ namespace KTDH
         private System.Windows.Forms.Button btTransform;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbDegree;
+        private System.Windows.Forms.Button btnDraw3D;
     }
 }
 
